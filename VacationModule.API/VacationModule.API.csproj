@@ -11,4 +11,17 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VacationModule.Core\VacationModule.Core.csproj" />
+    <ProjectReference Include="..\VacationModule.Infrastructure\VacationModule.Infrastructure.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="VacationModule.IntegrationTests"/>
+	</ItemGroup>
+
 </Project>
