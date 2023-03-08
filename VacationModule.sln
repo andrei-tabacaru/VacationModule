@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationModule_API", "VacationModule_API\VacationModule_API.csproj", "{5E78EB20-6269-4191-85FD-8EE9D02295EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationModule.API", "VacationModule.API\VacationModule.API.csproj", "{0494B6FE-4244-40B9-96B7-2B42A4B66270}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ED6828E1-8B50-4994-B161-6A810D0E69DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{29218D14-87B4-4062-8225-45CA365682BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5E78EB20-6269-4191-85FD-8EE9D02295EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E78EB20-6269-4191-85FD-8EE9D02295EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E78EB20-6269-4191-85FD-8EE9D02295EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E78EB20-6269-4191-85FD-8EE9D02295EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0494B6FE-4244-40B9-96B7-2B42A4B66270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0494B6FE-4244-40B9-96B7-2B42A4B66270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0494B6FE-4244-40B9-96B7-2B42A4B66270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0494B6FE-4244-40B9-96B7-2B42A4B66270}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0494B6FE-4244-40B9-96B7-2B42A4B66270} = {ED6828E1-8B50-4994-B161-6A810D0E69DA}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {029A4D48-544E-4152-B8CD-33947821934E}
+		SolutionGuid = {500ED056-4A06-4DB5-B9DC-161688926010}
 	EndGlobalSection
 EndGlobal
