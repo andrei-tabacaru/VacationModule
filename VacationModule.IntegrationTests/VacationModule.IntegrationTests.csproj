@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VacationModule.API\VacationModule.API.csproj" />
+  </ItemGroup>
+
 </Project>
