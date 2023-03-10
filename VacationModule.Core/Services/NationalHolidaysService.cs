@@ -92,13 +92,6 @@ namespace VacationModule.Core.Services
                 throw new ArgumentException(nameof(nationalHolidayUpdateRequest.HolidayDate));
             }
 
-            // duplicate data members
-            if (_nationalHolidays.Where(temp => temp.HolidayName == nationalHolidayUpdateRequest?.HolidayName).Count() > 0
-                || _nationalHolidays.Where(temp => temp.HolidayDate.Equals(nationalHolidayUpdateRequest.HolidayDate)).Count() > 0)
-            {
-                throw new ArgumentException("HolidayName or HolidayDate already exists");
-            }
-
             // doesn't exist
             NationalHoliday? nationalHolidayFromList = _nationalHolidays.FirstOrDefault(temp => temp.Id == nationalHolidayUpdateRequest?.Id);
             if (nationalHolidayFromList == null)
@@ -151,6 +144,28 @@ namespace VacationModule.Core.Services
             }
 
             return dictionaryToReturn;
+        }
+
+        public List<NationalHolidayResponse> UpdateYearTo(int year)
+        {
+            if(year < 0)
+            {
+                throw new ArgumentException(nameof(year));
+            }
+
+            // get the list of national holidays
+            var nationalHolidays_from_get = _nationalHolidays.Select(temp => temp).ToList();
+
+            // for each holiday, update the year 
+            foreach (var day in nationalHolidays_from_get)
+            {
+                day.HolidayDate = new DateOnly(year, day.HolidayDate!.Value.Month, day.HolidayDate.Value.Day);
+            }
+
+            // get the updated list
+            var nationalHolidays_from_get_updated = _nationalHolidays.Select(temp => temp.toNationalHolidayResponse()).ToList();
+
+            return nationalHolidays_from_get_updated;
         }
     }
 }

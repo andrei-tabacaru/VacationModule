@@ -66,7 +66,26 @@ namespace VacationModule.API.Controllers
             /*NationalHolidayUpdateRequest nationalHolidayUpdateRequest2 = nationalHolidayResponse
                 .toNationalHolidayUpdateRequest();*/
 
-            NationalHolidayResponse nationalHolidayUpdateResponse = _nationalHolidaysService.UpdateNationalHoliday(nationalHolidayUpdateRequest);
+            _nationalHolidaysService.UpdateNationalHoliday(nationalHolidayUpdateRequest);
+
+            return NoContent();
+        }
+
+        [HttpPut]
+        [Route("[action]/{year:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<NationalHolidayResponse>> UpdateNationalHolidaysToYear(int year)
+        {
+
+            List<NationalHolidayResponse> nationalHolidaysResponse = _nationalHolidaysService.GetAllNationalHolidays();
+
+            if (nationalHolidaysResponse == null)
+            {
+                return NotFound(nationalHolidaysResponse);
+            }
+
+            _nationalHolidaysService.UpdateYearTo(year);
 
             return NoContent();
         }

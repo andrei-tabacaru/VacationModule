@@ -53,5 +53,12 @@ namespace VacationModule.Core.ServiceContracts
         /// </summary>
         /// <returns>Dictionary with HolidayDate-HolidayName key-value pair for all national holiday objects</returns>
         Dictionary<DateOnly, string?> GetListToDictionary();
+
+        /// <summary>
+        /// Updates all existing national holiday's year to the given year
+        /// </summary>
+        /// <param name="year">The year to upate all existing national holidays year to</param>
+        /// <returns>List of updated national holiday response objects</returns>
+        List<NationalHolidayResponse> UpdateYearTo(int year);
     }
 }

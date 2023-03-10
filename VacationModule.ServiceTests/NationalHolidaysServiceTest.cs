@@ -419,5 +419,67 @@ namespace VacationModule.ServiceTests
         }
 
         #endregion
+
+        #region UpdateYearTo
+
+        [Fact]
+        public void UpdateYearTo_InvalidYear()
+        {
+            // Arrange
+            // the year can't be a negative number
+            int inputYear = -10;
+
+            // Assert 
+            Assert.Throws<ArgumentException>(() =>
+            {
+                // Act
+                _nationalHolidaysService.UpdateYearTo(inputYear);
+            });
+        }
+
+        [Fact]
+        public void UpdateYearTo_ProperArgument()
+        {
+            // Arrange 
+            // Add few national holidays
+            List<NationalHolidayAddRequest> nationalHoliday_add_request = new List<NationalHolidayAddRequest>
+            {
+                new NationalHolidayAddRequest() { HolidayDate = DateOnly.Parse("1/1/2023"),
+                                                  HolidayName = Guid.NewGuid().ToString()
+                                                },
+                new NationalHolidayAddRequest() { HolidayDate = DateOnly.Parse("2/1/2023"),
+                                                  HolidayName = Guid.NewGuid().ToString()
+                                                }
+            };
+
+            // year to update to
+            int inputYear = 2024;
+
+            // Act
+            // Add each nationalHoliday_add_request into the list
+            foreach (var nationalHoliday_request in nationalHoliday_add_request)
+            {
+                _nationalHolidaysService.AddNationalHoliday(nationalHoliday_request);
+            }
+
+
+
+            // Update the year to inputYear
+            _nationalHolidaysService.UpdateYearTo(inputYear);
+
+            // Get the list of updated national holidays
+            var actual_nationalHoliday_response_list = _nationalHolidaysService.GetAllNationalHolidays();
+
+            // Check each element from actual_nationalHoliday_response_list
+            foreach (var nationalHoliday in actual_nationalHoliday_response_list)
+            {
+                // Assert
+                // is the current element from actual_nationalHoliday_response_list's HolidayDate's year 
+                // equal to inputYear?
+                Assert.True(nationalHoliday.HolidayDate!.Value.Year == inputYear);
+            }
+        }
+
+        #endregion
     }
 }
