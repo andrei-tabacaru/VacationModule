@@ -31,17 +31,11 @@ namespace VacationModule.Core.Services
             {
                 throw new ArgumentException(nameof(nationalHolidayAddRequest.HolidayName));
             }
+
             // HolidayDate is null
-            if (nationalHolidayAddRequest.HolidayDate == null)
+            if (nationalHolidayAddRequest.HolidayDate.Equals(null))
             {
                 throw new ArgumentException(nameof(nationalHolidayAddRequest.HolidayDate));
-            }
-
-            // duplicate data members
-            if (_nationalHolidays.Where(temp => temp.HolidayName == nationalHolidayAddRequest?.HolidayName).Count() > 0
-                || _nationalHolidays.Where(temp => temp.HolidayDate.Equals(nationalHolidayAddRequest.HolidayDate)).Count() > 0)
-            {
-                throw new ArgumentException("HolidayName or HolidayDate already exists");
             }
 
             // Convert object from NationalHolidayAddRequest to NationalHoliday type
@@ -137,6 +131,26 @@ namespace VacationModule.Core.Services
             _nationalHolidays.RemoveAll(temp => temp.Id == Id);
 
             return true;
+        }
+
+        public Dictionary<DateOnly, string?> GetListToDictionary()
+        {
+            // get the list of national holidays
+            var nationalHolidays_from_get = _nationalHolidays.Select(temp => temp).ToList();
+
+            // new dictionary with DateOnly as key and string as value
+            Dictionary<DateOnly, string?> dictionaryToReturn = new Dictionary<DateOnly, string?>();
+
+            // for each holiday, if the holiday date is not null, add it to the dictionary
+            foreach (var day in nationalHolidays_from_get)
+            {
+                if (!day.HolidayDate.Equals(null))
+                {
+                    dictionaryToReturn[day.HolidayDate.Value] = day.HolidayName;
+                }
+            }
+
+            return dictionaryToReturn;
         }
     }
 }

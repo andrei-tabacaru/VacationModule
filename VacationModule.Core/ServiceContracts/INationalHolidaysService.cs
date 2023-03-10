@@ -31,7 +31,7 @@ namespace VacationModule.Core.ServiceContracts
         /// Returns the national holiday based on the given id
         /// </summary>
         /// <param name="Id">The id of the national holiday to get</param>
-        /// <returns>Matching national holiday object</returns>
+        /// <returns>Matching national holiday response object</returns>
         NationalHolidayResponse? GetNationalHolidayById(Guid? Id);
 
         /// <summary>
@@ -47,5 +47,11 @@ namespace VacationModule.Core.ServiceContracts
         /// <param name="Id">the id of the national holiday to delete</param>
         /// <returns>True if the object is deleted succesfully, otherwise False</returns>
         bool DeleteNationalHoliday(Guid? Id);
+
+        /// <summary>
+        /// Get a dictionary with HolidayDate-HolidayName key-value pair for all national holiday objects
+        /// </summary>
+        /// <returns>Dictionary with HolidayDate-HolidayName key-value pair for all national holiday objects</returns>
+        Dictionary<DateOnly, string?> GetListToDictionary();
     }
 }

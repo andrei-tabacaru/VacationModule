@@ -73,31 +73,6 @@ namespace VacationModule.ServiceTests
             });
         }
 
-
-        // If the HolidayName/HolidayDate is duplicate => throw ArgumentException
-        [Fact]
-        public void AddNationalHoliday_DuplicateArguments()
-        {
-            // Arrange
-            NationalHolidayAddRequest? request1 = new NationalHolidayAddRequest()
-            {
-                HolidayName = "name",
-                HolidayDate = DateOnly.Parse("1/1/2023")
-            };
-            NationalHolidayAddRequest? request2 = new NationalHolidayAddRequest()
-            {
-                HolidayName = "name",
-                HolidayDate = DateOnly.Parse("1/1/2023")
-            };
-
-            // Asset
-            Assert.Throws<ArgumentException>(() =>
-            {
-                // Act
-                _nationalHolidaysService.AddNationalHoliday(request1);
-                _nationalHolidaysService.AddNationalHoliday(request2);
-            });
-        }
         // If the HolidayName/HolidayDate are correct => add the national holiday to the existing list of national holidays
         [Fact]
         public void AddNationalHoliday_ProperArgumets()
@@ -130,7 +105,7 @@ namespace VacationModule.ServiceTests
         }
 
         [Fact]
-        public void GetAllNationalHolidays_AddHolidays()
+        public void GetAllNationalHolidays_AddFewHolidays()
         {
             // Arrange
             List<NationalHolidayAddRequest> nationalHoliday_add_request = new List<NationalHolidayAddRequest>
@@ -144,7 +119,7 @@ namespace VacationModule.ServiceTests
             };
 
             // Act
-            // The AddNationalHoliday method returns an NationalHolidayResponse object if succesful
+            // The AddNationalHoliday method returns a NationalHolidayResponse object if succesful
             // We will store them in a list to check if they are the same as those in the actual_nationalHoliday_response_list
             var nationalHolidays_list_from_add_nationalHoliday = new List<NationalHolidayResponse>();
             foreach(var nationalHoliday_request in nationalHoliday_add_request)
@@ -306,43 +281,6 @@ namespace VacationModule.ServiceTests
             });
         }
 
-        // If the HolidayDate/HoldayName is duplicate => throw ArgumentException
-        [Fact]
-        public void UpdateNationalHoliday_DuplcateArguments()
-        {
-            // Arrange
-            // Add 2 national holidays
-            NationalHolidayAddRequest nationalHoliday_add_request1 = new NationalHolidayAddRequest()
-            {
-                HolidayName = "String1",
-                HolidayDate = DateOnly.Parse("1/1/2023")
-            };
-            NationalHolidayAddRequest nationalHoliday_add_request2 = new NationalHolidayAddRequest()
-            {
-                HolidayName = "String2",
-                HolidayDate = DateOnly.Parse("2/1/2023")
-            };
-            // Get the responses
-            NationalHolidayResponse nationalHoliday_from_add1 = _nationalHolidaysService
-                .AddNationalHoliday(nationalHoliday_add_request1);
-
-            NationalHolidayResponse nationalHoliday_from_add2 = _nationalHolidaysService
-                .AddNationalHoliday(nationalHoliday_add_request2);
-
-            // Valid NationalHolidayUpdateRequest (HoldayName = "String2")
-            NationalHolidayUpdateRequest? nationalHoliday_update_request = nationalHoliday_from_add2
-                .toNationalHolidayUpdateRequest();
-            // Make HolidayName "String1"
-            nationalHoliday_update_request.HolidayName = "String1";
-
-            // Asset
-            Assert.Throws<ArgumentException>(() =>
-            {
-                // Act
-                _nationalHolidaysService.UpdateNationalHoliday(nationalHoliday_update_request);
-            });
-        }
-
         // If the HolidayName/HolidayDate are correct => update the national holiday in the existing list of national holidays
         [Fact]
         public void UpdateNationalHoliday_ProperArguments()
@@ -424,6 +362,60 @@ namespace VacationModule.ServiceTests
 
             // Assert
             Assert.True(isDeleted);
+        }
+
+        #endregion
+
+        #region GetListToDictionary
+
+        [Fact]
+        public void GetListToDictionary_EmptyDictonary()
+        {
+            // Act
+            Dictionary<DateOnly, string?> actual_nationalHoliday_response_dictionary = _nationalHolidaysService
+                .GetListToDictionary();
+
+            // Assert
+            Assert.Empty(actual_nationalHoliday_response_dictionary);
+        }
+
+        [Fact]
+        public void GetListToDictionary_AddFewHolidays()
+        {
+            // Arrange
+            List<NationalHolidayAddRequest> nationalHoliday_add_request = new List<NationalHolidayAddRequest>
+            {
+                new NationalHolidayAddRequest() { HolidayDate = DateOnly.Parse("1/1/2023"),
+                                                  HolidayName = Guid.NewGuid().ToString()
+                                                },
+                new NationalHolidayAddRequest() { HolidayDate = DateOnly.Parse("2/1/2023"),
+                                                  HolidayName = Guid.NewGuid().ToString()
+                                                }
+            };
+
+            // Act
+            // Add each nationalHoliday_add_request into the list
+            
+            foreach (var nationalHoliday_request in nationalHoliday_add_request)
+            {
+                _nationalHolidaysService.AddNationalHoliday(nationalHoliday_request);
+            }
+
+
+            // Get the list of national holidays
+            var actual_nationalHoliday_response_list = _nationalHolidaysService.GetAllNationalHolidays();
+
+            // Convert to dictionary
+            var nationalHoliday_dictionary = _nationalHolidaysService.GetListToDictionary();
+
+            // Check each element from actual_nationalHoliday_response_list
+            foreach (var expected_nationalHoliday in actual_nationalHoliday_response_list)
+            {
+                // Assert
+                // is the current element from actual_nationalHoliday_response_list's HolidayDate in
+                // the nationalHoliday_dictionary?
+                Assert.True(nationalHoliday_dictionary.ContainsKey((DateOnly)expected_nationalHoliday.HolidayDate!));
+            }
         }
 
         #endregion

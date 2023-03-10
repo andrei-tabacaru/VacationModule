@@ -1,7 +1,10 @@
-﻿using System;
+﻿using DateOnlyTimeOnly.AspNet.Converters;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace VacationModule.Core.Domain.Entities
@@ -16,7 +19,8 @@ namespace VacationModule.Core.Domain.Entities
     public class NationalHoliday
     {
         public Guid Id { get; set; }
-        public string? HolidayName { get; set; }    
+        [StringLength(40)] // nvarchar(40)
+        public string? HolidayName { get; set; }
         public DateOnly? HolidayDate { get; set; }   
     }
 }
