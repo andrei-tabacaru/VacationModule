@@ -20,13 +20,14 @@ namespace VacationModule.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<NationalHolidayResponse> Create(NationalHolidayAddRequest nationalHolidayAddRequest)
+        public async Task<ActionResult<NationalHolidayResponse>> Create(NationalHolidayAddRequest nationalHolidayAddRequest)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            NationalHolidayResponse? natioalHolidayResponse = _nationalHolidaysService.AddNationalHoliday(nationalHolidayAddRequest);
+            NationalHolidayResponse? natioalHolidayResponse = await _nationalHolidaysService
+                .AddNationalHolidayAsync(nationalHolidayAddRequest);
 
             return Ok(natioalHolidayResponse);
         }
@@ -34,9 +35,9 @@ namespace VacationModule.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<NationalHolidayResponse>> GetNationalHolidays()
+        public async Task<ActionResult<List<NationalHolidayResponse>>> GetNationalHolidays()
         {
-            List<NationalHolidayResponse> nationalHolidaysList = _nationalHolidaysService.GetAllNationalHolidays();
+            List<NationalHolidayResponse> nationalHolidaysList = await _nationalHolidaysService.GetAllNationalHolidaysAsync();
 
             return Ok(nationalHolidaysList);
         }
@@ -46,7 +47,7 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<NationalHolidayResponse> Edit(Guid Id, NationalHolidayUpdateRequest nationalHolidayUpdateRequest)
+        public async Task<ActionResult<NationalHolidayResponse>> Edit(Guid Id, NationalHolidayUpdateRequest nationalHolidayUpdateRequest)
         {
             // The given Id and the nationalHolidayUpdateRequest's Id should be the same
             // otherwise HttpPut will create a new object
@@ -55,18 +56,15 @@ namespace VacationModule.API.Controllers
                 return BadRequest();
             }
 
-            NationalHolidayResponse? nationalHolidayResponse = _nationalHolidaysService
-                .GetNationalHolidayById(Id);
+            NationalHolidayResponse? nationalHolidayResponse = await _nationalHolidaysService
+                .GetNationalHolidayByIdAsync(Id);
 
             if(nationalHolidayResponse == null)
             {
                 return NotFound(nationalHolidayResponse);
             }
 
-            /*NationalHolidayUpdateRequest nationalHolidayUpdateRequest2 = nationalHolidayResponse
-                .toNationalHolidayUpdateRequest();*/
-
-            _nationalHolidaysService.UpdateNationalHoliday(nationalHolidayUpdateRequest);
+            await _nationalHolidaysService.UpdateNationalHolidayAsync(nationalHolidayUpdateRequest);
 
             return NoContent();
         }
@@ -75,17 +73,17 @@ namespace VacationModule.API.Controllers
         [Route("[action]/{year:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<List<NationalHolidayResponse>> UpdateNationalHolidaysToYear(int year)
+        public async Task<ActionResult<List<NationalHolidayResponse>>> UpdateNationalHolidaysToYear(int year)
         {
 
-            List<NationalHolidayResponse> nationalHolidaysResponse = _nationalHolidaysService.GetAllNationalHolidays();
+            List<NationalHolidayResponse> nationalHolidaysResponse = await _nationalHolidaysService.GetAllNationalHolidaysAsync();
 
             if (nationalHolidaysResponse == null)
             {
                 return NotFound(nationalHolidaysResponse);
             }
 
-            _nationalHolidaysService.UpdateYearTo(year);
+            await _nationalHolidaysService.UpdateYearToAsync(year);
 
             return NoContent();
         }
@@ -95,21 +93,21 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<bool> DeleteNationalHolidays(Guid? Id)
+        public async Task<ActionResult<bool>> DeleteNationalHolidays(Guid? Id)
         {
             if(Id == null)
             {
                 return BadRequest();
             }
 
-            NationalHolidayResponse? nationalHolidayGetResponse = _nationalHolidaysService.GetNationalHolidayById(Id);
+            NationalHolidayResponse? nationalHolidayGetResponse = await _nationalHolidaysService.GetNationalHolidayByIdAsync(Id);
 
             if(nationalHolidayGetResponse == null)
             {
                 return NotFound();
             }
 
-            _nationalHolidaysService.DeleteNationalHoliday(nationalHolidayGetResponse.Id);
+            await _nationalHolidaysService.DeleteNationalHolidayAsync(nationalHolidayGetResponse.Id);
 
             return NoContent();   
         }

@@ -1,0 +1,77 @@
+[
+  {
+    "Id": "c71c9bcf-3747-40a2-b005-b63f95c6f8db",
+    "HolidayName": "New Year's Day",
+    "HolidayDate": "2023-01-01"
+  },
+  {
+    "Id": "9cde8a3c-df02-4bae-9ace-8ada36363b38",
+    "HolidayName": "Day after New Year's Day",
+    "HolidayDate": "2023-01-02"
+  },
+  {
+    "Id": "dc1b5e58-30b2-4dea-bca5-166bc9e799df",
+    "HolidayName": "Unification Day",
+    "HolidayDate": "2023-01-24"
+  },
+  {
+    "Id": "65655954-832b-4a51-af7f-8ba1efdd20aa",
+    "HolidayName": "Orthodox Good FrIday",
+    "HolidayDate": "2023-04-22"
+  },
+  {
+    "Id": "74835416-7473-47e8-8d3d-c53d12666895",
+    "HolidayName": "Orthodox Easter Day",
+    "HolidayDate": "2023-04-24"
+  },
+  {
+    "Id": "0b6cb8cd-86cb-4c37-a292-f5e05a484ed2",
+    "HolidayName": "Orthodox Easter Monday",
+    "HolidayDate": "2023-04-25"
+  },
+  {
+    "Id": "3a21493d-82ce-4b2f-b33f-e806577546a1",
+    "HolidayName": "Labour Day",
+    "HolidayDate": "2023-05-01"
+  },
+  {
+    "Id": "7ee6f713-389d-437f-9543-b73cdeefd91a",
+    "HolidayName": "International Children's Day",
+    "HolidayDate": "2023-06-01"
+  },
+  {
+    "Id": "260f0bb1-59d3-401f-ad89-ed691af17eef",
+    "HolidayName": "Orthodox Pentecost",
+    "HolidayDate": "2023-06-12"
+  },
+  {
+    "Id": "2136abe1-9921-441b-b9c0-176e2972e48d",
+    "HolidayName": "Descent the of Holy Spirit",
+    "HolidayDate": "2023-06-13"
+  },
+  {
+    "Id": "b0568024-46d2-4e5d-a61f-08ccc2acee90",
+    "HolidayName": "St Mary's Day",
+    "HolidayDate": "2023-08-15"
+  },
+  {
+    "Id": "25f590a2-2d93-4b59-9481-9f95d9adb790",
+    "HolidayName": "Feast of St. Andrew",
+    "HolidayDate": "2023-11-30"
+  },
+  {
+    "Id": "d40c8731-1bf5-4729-867b-b9d2fe8f2e97",
+    "HolidayName": "National Day",
+    "HolidayDate": "2023-12-01"
+  },
+  {
+    "Id": "d40c8731-1bf5-4729-867b-b9d2ce8f2e97",
+    "HolidayName": "Christmas Day",
+    "HolidayDate": "2023-12-25"
+  },
+  {
+    "Id": "d40c8731-1bf5-4729-867b-b9d2ce8f2e98",
+    "HolidayName": "Second day of Christmas",
+    "HolidayDate": "2023-12-26"
+  }
+]

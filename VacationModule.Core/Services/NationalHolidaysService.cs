@@ -1,10 +1,7 @@
-﻿using NationalHolidayModule.Core.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using NationalHolidayModule.Core.DTO;
 using VacationModule.Core.Domain.Entities;
+using VacationModule.Core.Domain.RepositoryContracts;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
 
@@ -12,13 +9,14 @@ namespace VacationModule.Core.Services
 {
     public class NationalHolidaysService : INationalHolidaysService
     {
-        private readonly List<NationalHoliday> _nationalHolidays;
+        private readonly INationalHolidayRepository _nationalHolidayRepository;
 
-        public NationalHolidaysService()
+        public NationalHolidaysService(INationalHolidayRepository nationalHolidayRepository)
         {
-            _nationalHolidays= new List<NationalHoliday>();
+
+            _nationalHolidayRepository = nationalHolidayRepository;
         }
-        public NationalHolidayResponse AddNationalHoliday(NationalHolidayAddRequest? nationalHolidayAddRequest)
+        public async Task<NationalHolidayResponse> AddNationalHolidayAsync(NationalHolidayAddRequest? nationalHolidayAddRequest)
         {
             // nationalHolidayAddRequest is null
             if(nationalHolidayAddRequest == null)
@@ -45,25 +43,26 @@ namespace VacationModule.Core.Services
             nationalHoliday.Id = Guid.NewGuid();
 
             // Add Holiday object into _nationalHolidays
-            _nationalHolidays.Add(nationalHoliday);
+            await _nationalHolidayRepository.AddNationalHolidayAsync(nationalHoliday);
 
             return nationalHoliday.toNationalHolidayResponse();
         }
 
-        public List<NationalHolidayResponse> GetAllNationalHolidays()
+        public async Task<List<NationalHolidayResponse>> GetAllNationalHolidaysAsync()
         {
             // we have to convert the NationalHoliday objects to NationalHolidayResponse
-            return _nationalHolidays.Select(nationalHoliday => nationalHoliday.toNationalHolidayResponse()).ToList();
+            return (await _nationalHolidayRepository.GetAllNationalHolidaysAsync())
+                .Select(nationalHoliday => nationalHoliday.toNationalHolidayResponse()).ToList();
         }
 
-        public NationalHolidayResponse? GetNationalHolidayById(Guid? Id)
+        public async Task<NationalHolidayResponse?> GetNationalHolidayByIdAsync(Guid? Id)
         {
             // if the given id is null, return null object
             if(Id == null)
                 return null;
             
             // get the national holiday by id, if none are found we get null
-            NationalHoliday? nationalHoliday = _nationalHolidays.FirstOrDefault(temp => temp.Id == Id);
+            NationalHoliday? nationalHoliday = await _nationalHolidayRepository.GetNationalHolidayByIdAsync(Id.Value);
 
             // in case we get null we return null
             if(nationalHoliday == null) 
@@ -73,7 +72,7 @@ namespace VacationModule.Core.Services
             return nationalHoliday.toNationalHolidayResponse();
         }
 
-        public NationalHolidayResponse UpdateNationalHoliday(NationalHolidayUpdateRequest? nationalHolidayUpdateRequest)
+        public async Task<NationalHolidayResponse> UpdateNationalHolidayAsync(NationalHolidayUpdateRequest? nationalHolidayUpdateRequest)
         {
             // nationalHolidayUpdateRequest is null
             if(nationalHolidayUpdateRequest == null)
@@ -92,50 +91,54 @@ namespace VacationModule.Core.Services
                 throw new ArgumentException(nameof(nationalHolidayUpdateRequest.HolidayDate));
             }
 
+            // get national holiday from database
+            NationalHoliday? nationalHolidayFromDb = await _nationalHolidayRepository
+                .GetNationalHolidayByIdAsync(nationalHolidayUpdateRequest.Id);
+
             // doesn't exist
-            NationalHoliday? nationalHolidayFromList = _nationalHolidays.FirstOrDefault(temp => temp.Id == nationalHolidayUpdateRequest?.Id);
-            if (nationalHolidayFromList == null)
+            if (nationalHolidayFromDb == null)
             {
                 throw new ArgumentException(nameof(nationalHolidayUpdateRequest.Id));
             }
             else
             { // update
-                nationalHolidayFromList.HolidayName = nationalHolidayUpdateRequest.HolidayName;
-                nationalHolidayFromList.HolidayDate = nationalHolidayUpdateRequest.HolidayDate;
+                nationalHolidayFromDb.HolidayName = nationalHolidayUpdateRequest.HolidayName;
+                nationalHolidayFromDb.HolidayDate = nationalHolidayUpdateRequest.HolidayDate;
+
+                await _nationalHolidayRepository.UpdateNationalHolidayAsync(nationalHolidayFromDb);
             }
 
             // and then return as NationalHolidayResponse object
-            return nationalHolidayFromList.toNationalHolidayResponse();
+            return nationalHolidayFromDb.toNationalHolidayResponse();
         }
 
-        public bool DeleteNationalHoliday(Guid? Id)
+        public async Task<bool> DeleteNationalHolidayAsync(Guid? Id)
         {
             // if the given id is null, throw exception
             if (Id == null)
                 throw new ArgumentNullException(nameof(Id));
 
-            NationalHoliday? nationalHoliday_from_list = _nationalHolidays.FirstOrDefault(temp => temp.Id == Id);
+            // get the national holiday from database
+            NationalHoliday? nationalHolidayFromDb = await _nationalHolidayRepository.GetNationalHolidayByIdAsync(Id.Value);
 
             // if the object we get is null, return false
-            if (nationalHoliday_from_list == null)
+            if (nationalHolidayFromDb == null)
                 return false;
 
             // remove the object
-            _nationalHolidays.RemoveAll(temp => temp.Id == Id);
-
-            return true;
+            return await _nationalHolidayRepository.DeleteNationalHolidayByIdAsync(Id.Value);
         }
 
-        public Dictionary<DateOnly, string?> GetListToDictionary()
+        public async Task<Dictionary<DateOnly, string?>> GetListToDictionaryAsync()
         {
-            // get the list of national holidays
-            var nationalHolidays_from_get = _nationalHolidays.Select(temp => temp).ToList();
+            // get the list of all national holidays
+            var nationalHolidaysFromGet = await _nationalHolidayRepository.GetAllNationalHolidaysAsync();
 
             // new dictionary with DateOnly as key and string as value
             Dictionary<DateOnly, string?> dictionaryToReturn = new Dictionary<DateOnly, string?>();
 
             // for each holiday, if the holiday date is not null, add it to the dictionary
-            foreach (var day in nationalHolidays_from_get)
+            foreach (var day in nationalHolidaysFromGet)
             {
                 if (!day.HolidayDate.Equals(null))
                 {
@@ -146,26 +149,33 @@ namespace VacationModule.Core.Services
             return dictionaryToReturn;
         }
 
-        public List<NationalHolidayResponse> UpdateYearTo(int year)
+        public async Task<List<NationalHolidayResponse>> UpdateYearToAsync(int year)
         {
             if(year < 0)
             {
                 throw new ArgumentException(nameof(year));
             }
 
-            // get the list of national holidays
-            var nationalHolidays_from_get = _nationalHolidays.Select(temp => temp).ToList();
+            // get the list of all national holidays
+            var nationalHolidaysFromGet = await _nationalHolidayRepository.GetAllNationalHolidaysAsync();
 
             // for each holiday, update the year 
-            foreach (var day in nationalHolidays_from_get)
+            foreach (var day in nationalHolidaysFromGet)
             {
                 day.HolidayDate = new DateOnly(year, day.HolidayDate!.Value.Month, day.HolidayDate.Value.Day);
+                await _nationalHolidayRepository.UpdateNationalHolidayAsync(day);
             }
 
             // get the updated list
-            var nationalHolidays_from_get_updated = _nationalHolidays.Select(temp => temp.toNationalHolidayResponse()).ToList();
+            var nationalHolidaysFromGetUpdated = (
+                // get all national holiday objects
+                await _nationalHolidayRepository.GetAllNationalHolidaysAsync())
+                // convert them to response DTO
+                .Select(temp => temp.toNationalHolidayResponse())
+                // to list
+                .ToList();
 
-            return nationalHolidays_from_get_updated;
+            return nationalHolidaysFromGetUpdated;
         }
     }
 }

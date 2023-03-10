@@ -7,22 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="nationalholidays.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="nationalholidays.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\RepositoryContracts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DateOnlyTimeOnly.AspNet.Swashbuckle" Version="2.1.1" />
   </ItemGroup>
 
