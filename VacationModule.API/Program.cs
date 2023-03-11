@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using VacationModule.Infrastructure.Context;
 using VacationModule.Core.Domain.RepositoryContracts;
 using VacationModule.Infrastructure.Repositories;
+using VacationModule.Core.Domain.IdentityEntities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,27 @@ builder.Services.AddDbContext<ApplicationDbContext>
             .GetConnectionString("DefaultConnection")
             ,x => x.UseDateOnlyTimeOnly());
     });
+
+// Enable Identiy with ApplicationUser for storing user details and ApplicationRole for storing role details
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+    {
+        // Reduce password complexity
+        options.Password.RequiredLength = 3; 
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredUniqueChars = 1;
+    })
+    .AddDefaultTokenProviders()
+    // use Entity Framework to store the data in ApplicationDbContext
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    // configure the creation of the Repository
+    // for users
+    .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
+    // for roles
+    .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -39,8 +63,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication(); // Reading Identity cookie
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { } // makes the auto-generated Program accesible to the developer
