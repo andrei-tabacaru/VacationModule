@@ -22,7 +22,7 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NationalHolidayResponse>> Create(NationalHolidayAddRequest nationalHolidayAddRequest)
         {
-            if(!ModelState.IsValid)
+            if (nationalHolidayAddRequest.HolidayDate.Equals(null))
             {
                 return BadRequest(ModelState);
             }
@@ -47,13 +47,13 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<NationalHolidayResponse>> Edit(Guid Id, NationalHolidayUpdateRequest nationalHolidayUpdateRequest)
+        public async Task<ActionResult<NationalHolidayResponse>> Edit(Guid Id, NationalHolidayUpdateRequest? nationalHolidayUpdateRequest)
         {
             // The given Id and the nationalHolidayUpdateRequest's Id should be the same
             // otherwise HttpPut will create a new object
             if (nationalHolidayUpdateRequest == null || Id != nationalHolidayUpdateRequest.Id)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             NationalHolidayResponse? nationalHolidayResponse = await _nationalHolidaysService
@@ -78,7 +78,7 @@ namespace VacationModule.API.Controllers
 
             List<NationalHolidayResponse> nationalHolidaysResponse = await _nationalHolidaysService.GetAllNationalHolidaysAsync();
 
-            if (nationalHolidaysResponse == null)
+            if (nationalHolidaysResponse.Count == 0)
             {
                 return NotFound(nationalHolidaysResponse);
             }
@@ -93,18 +93,18 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<bool>> DeleteNationalHolidays(Guid? Id)
+        public async Task<ActionResult<bool>> DeleteNationalHoliday(Guid? Id)
         {
             if(Id == null)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             NationalHolidayResponse? nationalHolidayGetResponse = await _nationalHolidaysService.GetNationalHolidayByIdAsync(Id);
 
             if(nationalHolidayGetResponse == null)
             {
-                return NotFound();
+                return NotFound(ModelState);
             }
 
             await _nationalHolidaysService.DeleteNationalHolidayAsync(nationalHolidayGetResponse.Id);
