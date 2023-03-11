@@ -131,11 +131,15 @@ namespace VacationModule.Core.Services
 
         public async Task<Dictionary<DateOnly, string?>> GetListToDictionaryAsync()
         {
+            // new dictionary with DateOnly as key and string as value
+            Dictionary<DateOnly, string?> dictionaryToReturn = new Dictionary<DateOnly, string?>();
+
             // get the list of all national holidays
             var nationalHolidaysFromGet = await _nationalHolidayRepository.GetAllNationalHolidaysAsync();
 
-            // new dictionary with DateOnly as key and string as value
-            Dictionary<DateOnly, string?> dictionaryToReturn = new Dictionary<DateOnly, string?>();
+            // if the list is empty, return the empty dictionary
+            if (nationalHolidaysFromGet == null)
+                return dictionaryToReturn;
 
             // for each holiday, if the holiday date is not null, add it to the dictionary
             foreach (var day in nationalHolidaysFromGet)

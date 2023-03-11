@@ -14,7 +14,7 @@ namespace VacationModule.Infrastructure.Context
         {
 
         }
-        public DbSet<NationalHoliday> NationalHolidays { get; set;} 
+        public virtual DbSet<NationalHoliday> NationalHolidays { get; set;} 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
