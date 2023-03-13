@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VacationModule.API\VacationModule.API.csproj" />
     <ProjectReference Include="..\VacationModule.Core\VacationModule.Core.csproj" />
   </ItemGroup>
 

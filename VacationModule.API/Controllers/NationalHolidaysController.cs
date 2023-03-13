@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NationalHolidayModule.Core.DTO;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
 
 namespace VacationModule.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/national-holidays")]
     [ApiController]
     public class NationalHolidaysController : Controller
     {
@@ -16,81 +17,97 @@ namespace VacationModule.API.Controllers
             _nationalHolidaysService = nationalHolidaysService;
         }
 
-        [HttpPost]
-        [Route("[action]")]
+        [HttpPost("/api/admin/national-holidays")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<NationalHolidayResponse> Create(NationalHolidayAddRequest nationalHolidayAddRequest)
+        public async Task<ActionResult<NationalHolidayResponse>> Create(NationalHolidayAddRequest nationalHolidayAddRequest)
         {
-            if(!ModelState.IsValid)
+            if (nationalHolidayAddRequest.HolidayDate.Equals(null))
             {
                 return BadRequest(ModelState);
             }
-            NationalHolidayResponse? natioalHolidayResponse = _nationalHolidaysService.AddNationalHoliday(nationalHolidayAddRequest);
+            NationalHolidayResponse natioalHolidayResponse = await _nationalHolidaysService
+                .AddNationalHolidayAsync(nationalHolidayAddRequest);
 
             return Ok(natioalHolidayResponse);
         }
 
         [HttpGet]
-        [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<NationalHolidayResponse>> GetNationalHolidays()
+        public async Task<ActionResult<List<NationalHolidayResponse>>> GetNationalHolidays()
         {
-            List<NationalHolidayResponse> nationalHolidaysList = _nationalHolidaysService.GetAllNationalHolidays();
+            List<NationalHolidayResponse> nationalHolidaysList = await _nationalHolidaysService.GetAllNationalHolidaysAsync();
 
             return Ok(nationalHolidaysList);
         }
 
-        [HttpPut]
-        [Route("[action]/{Id:Guid}")]
+        [HttpPut("/api/admin/national-holidays/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<NationalHolidayResponse> Edit(Guid Id, NationalHolidayUpdateRequest nationalHolidayUpdateRequest)
+        public async Task<ActionResult<NationalHolidayResponse>> Edit(Guid Id, NationalHolidayUpdateRequest? nationalHolidayUpdateRequest)
         {
             // The given Id and the nationalHolidayUpdateRequest's Id should be the same
             // otherwise HttpPut will create a new object
             if (nationalHolidayUpdateRequest == null || Id != nationalHolidayUpdateRequest.Id)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            NationalHolidayResponse? nationalHolidayResponse = _nationalHolidaysService
-                .GetNationalHolidayById(Id);
+            NationalHolidayResponse? nationalHolidayResponse = await _nationalHolidaysService
+                .GetNationalHolidayByIdAsync(Id);
 
             if(nationalHolidayResponse == null)
             {
                 return NotFound(nationalHolidayResponse);
             }
 
-            /*NationalHolidayUpdateRequest nationalHolidayUpdateRequest2 = nationalHolidayResponse
-                .toNationalHolidayUpdateRequest();*/
-
-            NationalHolidayResponse nationalHolidayUpdateResponse = _nationalHolidaysService.UpdateNationalHoliday(nationalHolidayUpdateRequest);
+            await _nationalHolidaysService.UpdateNationalHolidayAsync(nationalHolidayUpdateRequest);
 
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("[action]/{Id:Guid}")]
+        [HttpPut("/api/admin/national-holidays/{yearId}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<List<NationalHolidayResponse>>> UpdateNationalHolidaysToYear(int year)
+        {
+
+            List<NationalHolidayResponse> nationalHolidaysResponse = await _nationalHolidaysService.GetAllNationalHolidaysAsync();
+
+            if (nationalHolidaysResponse.Count == 0)
+            {
+                return NotFound(nationalHolidaysResponse);
+            }
+
+            await _nationalHolidaysService.UpdateYearToAsync(year);
+
+            return NoContent();
+        }
+
+        [HttpDelete("/api/admin/national-holidays/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<bool> DeleteNationalHolidays(Guid? Id)
+        public async Task<ActionResult<bool>> DeleteNationalHoliday(Guid? Id)
         {
             if(Id == null)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            NationalHolidayResponse? nationalHolidayGetResponse = _nationalHolidaysService.GetNationalHolidayById(Id);
+            NationalHolidayResponse? nationalHolidayGetResponse = await _nationalHolidaysService.GetNationalHolidayByIdAsync(Id);
 
             if(nationalHolidayGetResponse == null)
             {
-                return NotFound();
+                return NotFound(ModelState);
             }
 
-            _nationalHolidaysService.DeleteNationalHoliday(nationalHolidayGetResponse.Id);
+            await _nationalHolidaysService.DeleteNationalHolidayAsync(nationalHolidayGetResponse.Id);
 
             return NoContent();   
         }

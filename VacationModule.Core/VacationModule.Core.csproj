@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\RepositoryContracts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DateOnlyTimeOnly.AspNet.Swashbuckle" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.3" />
   </ItemGroup>
 
 </Project>

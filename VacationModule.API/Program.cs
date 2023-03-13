@@ -3,6 +3,11 @@ using VacationModule.Core.ServiceContracts;
 using VacationModule.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using VacationModule.Infrastructure.Context;
+using VacationModule.Core.Domain.RepositoryContracts;
+using VacationModule.Infrastructure.Repositories;
+using VacationModule.Core.Domain.IdentityEntities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,12 +15,41 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<INationalHolidaysService, NationalHolidaysService>();
-/*builder.Services.AddDbContext<ApplicationDbContext>
-    (options => {
+// repositories
+builder.Services.AddScoped<INationalHolidayRepository, NationalHolidayRepository>();
+builder.Services.AddScoped<IVacationRepository, VacationRepository>();
+// services
+builder.Services.AddScoped<INationalHolidaysService, NationalHolidaysService>();
+builder.Services.AddScoped<IVacationsService, VacationsService>();
+// dbContext
+builder.Services.AddDbContext<ApplicationDbContext>
+    (options =>
+    {
         options.UseSqlServer(builder.Configuration
-            .GetConnectionString("DefaultConnection"));
-    });*/
+            .GetConnectionString("DefaultConnection")
+            ,x => x.UseDateOnlyTimeOnly());
+    });
+
+// Enable Identiy with ApplicationUser for storing user details and ApplicationRole for storing role details
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+    {
+        // Reduce password complexity
+        options.Password.RequiredLength = 3; 
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredUniqueChars = 1;
+    })
+    .AddDefaultTokenProviders()
+    // use Entity Framework to store the data in ApplicationDbContext
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    // configure the creation of the Repository
+    // for users
+    .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
+    // for roles
+    .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -34,8 +68,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication(); // Reading Identity cookie
+
 app.UseAuthorization();
+
+//app.UseRouting();
 
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { } // makes the auto-generated Program accesible to the developer
