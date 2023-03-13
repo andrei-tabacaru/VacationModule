@@ -24,7 +24,7 @@ namespace VacationModule.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDTO registerDTO)
+        public async Task<IActionResult> Register([FromBody]RegisterDTO registerDTO)
         {
             // Check for validation errors
             if(ModelState.IsValid == false)
@@ -61,6 +61,16 @@ namespace VacationModule.API.Controllers
                 }
                 else
                 {
+                    if (await _roleManager.FindByNameAsync(UserRoleOptions.Employee.ToString()) is null)
+                    {
+                        ApplicationRole applicationRole = new ApplicationRole()
+                        {
+                            Name = UserRoleOptions.Employee.ToString()
+                        };
+
+                        await _roleManager.CreateAsync(applicationRole);
+                    }
+
                     await _userManager.AddToRoleAsync(user, UserRoleOptions.Employee.ToString());
                 }
 
@@ -83,7 +93,7 @@ namespace VacationModule.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody]LoginDTO loginDTO)
         {
             // Check for validation errors
             if (ModelState.IsValid == false)
@@ -101,11 +111,11 @@ namespace VacationModule.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(result);
+                return Ok(loginDTO);
             }
             ModelState.AddModelError("Login", "Invalid email or password");
             
-            return BadRequest(ModelState);
+            return BadRequest(result);
         }
 
         [HttpPost]

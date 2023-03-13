@@ -15,8 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
+// repositories
 builder.Services.AddScoped<INationalHolidayRepository, NationalHolidayRepository>();
+builder.Services.AddScoped<IVacationRepository, VacationRepository>();
+// services
 builder.Services.AddScoped<INationalHolidaysService, NationalHolidaysService>();
+builder.Services.AddScoped<IVacationsService, VacationsService>();
+// dbContext
 builder.Services.AddDbContext<ApplicationDbContext>
     (options =>
     {
@@ -66,6 +71,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication(); // Reading Identity cookie
 
 app.UseAuthorization();
+
+//app.UseRouting();
 
 app.MapControllers();
 

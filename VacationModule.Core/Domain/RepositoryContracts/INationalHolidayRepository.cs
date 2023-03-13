@@ -45,5 +45,11 @@ namespace VacationModule.Core.Domain.RepositoryContracts
         /// <param name="nationalHoliday">National holiday objetct to update</param>
         /// <returns>The updated national holiday object</returns>
         Task<NationalHoliday> UpdateNationalHolidayAsync(NationalHoliday nationalHoliday);
+
+        /// <summary>
+        /// Returns a dictionary with HolidayDate-HolidayName key-value pair of all national holiday objects
+        /// </summary>
+        /// <returns>Dictionary with HolidayDate-HolidayName key-value pair of all national holiday objects</returns>
+        Task<Dictionary<DateOnly, string?>> GetNationalHolidaysDictionaryAsync();
     }
 }

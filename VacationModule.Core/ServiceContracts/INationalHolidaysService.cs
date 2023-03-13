@@ -52,7 +52,7 @@ namespace VacationModule.Core.ServiceContracts
         /// Get a dictionary with HolidayDate-HolidayName key-value pair for all national holiday objects
         /// </summary>
         /// <returns>Dictionary with HolidayDate-HolidayName key-value pair for all national holiday objects</returns>
-        Task<Dictionary<DateOnly, string?>> GetListToDictionaryAsync();
+        /*Task<Dictionary<DateOnly, string?>> GetListToDictionaryAsync();*/
 
         /// <summary>
         /// Updates all existing national holiday's year to the given year

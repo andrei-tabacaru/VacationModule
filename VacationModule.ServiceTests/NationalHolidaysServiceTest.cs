@@ -481,69 +481,6 @@ namespace VacationModule.ServiceTests
 
         #endregion
 
-        
-        #region GetListToDictionary
-
-        [Fact]
-        public async Task GetListToDictionary_EmptyTable_ToBeEmpty()
-        {
-            // Arrange 
-            // Dummy empty list of national holidays
-            List<NationalHoliday> emptyListOfNationalHolidaysResponse = new List<NationalHoliday>();
-
-            // Mock the repository
-            // For any call of GetAllNationalHolidaysAsync method
-            _nationalHolidayRepositoryMock.Setup(temp => temp.GetAllNationalHolidaysAsync())
-                // return the empty list
-                .ReturnsAsync(emptyListOfNationalHolidaysResponse);
-
-            // Act
-            Dictionary<DateOnly, string?> actualNationalHolidayResponseDictionary = await _nationalHolidaysService
-                .GetListToDictionaryAsync();
-
-            // Assert
-            Assert.Empty(actualNationalHolidayResponseDictionary);
-        }
-
-        [Fact]
-        public async Task GetListToDictionary_FewNationalHolidays_ToBeSuccesful()
-        {
-            // Arrange
-            // Dummy empty list of national holidays
-            List<NationalHoliday> nationalHolidaysList = new List<NationalHoliday>
-            {
-                new NationalHoliday() { Id = Guid.NewGuid(),
-                                        HolidayDate = DateOnly.Parse("1/1/2023"),
-                                        HolidayName = Guid.NewGuid().ToString()
-                                      },
-                new NationalHoliday() { Id = Guid.NewGuid(),
-                                        HolidayDate = DateOnly.Parse("2/1/2023"),
-                                        HolidayName = Guid.NewGuid().ToString()
-                                      }
-            };
-
-            // Mock the repository
-            // For any call of GetAllNationalHolidaysAsync method
-            _nationalHolidayRepositoryMock.Setup(temp => temp.GetAllNationalHolidaysAsync())
-                // return the same list
-                .ReturnsAsync(nationalHolidaysList);
-
-            // Act
-
-            // Convert to dictionary
-            var nationalHolidayDictionary = await _nationalHolidaysService.GetListToDictionaryAsync();
-
-            // Check each element from nationalHolidaysList
-            foreach (var expected_nationalHoliday in nationalHolidaysList)
-            {
-                // Assert
-                // is the current element from actual_nationalHoliday_response_list's HolidayDate in
-                // the nationalHoliday_dictionary?
-                Assert.True(nationalHolidayDictionary.ContainsKey((DateOnly)expected_nationalHoliday.HolidayDate!));
-            }
-        }
-
-        #endregion
 
         #region UpdateYearTo
 

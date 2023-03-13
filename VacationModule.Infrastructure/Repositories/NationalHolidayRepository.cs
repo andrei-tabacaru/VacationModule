@@ -62,5 +62,29 @@ namespace VacationModule.Infrastructure.Repositories
 
             return nationalHolidayFromDb;
         }
+
+        public async Task<Dictionary<DateOnly, string?>> GetNationalHolidaysDictionaryAsync()
+        {
+            // new dictionary with DateOnly as key and string as value
+            Dictionary<DateOnly, string?> dictionaryToReturn = new Dictionary<DateOnly, string?>();
+
+            // get the list of all national holidays
+            var nationalHolidaysFromGet = await _dbContext.NationalHolidays.ToListAsync();
+
+            // if the list is empty, return the empty dictionary
+            if (nationalHolidaysFromGet == null)
+                return dictionaryToReturn;
+
+            // for each holiday, if the holiday date is not null, add it to the dictionary
+            foreach (var day in nationalHolidaysFromGet)
+            {
+                if (!day.HolidayDate.Equals(null))
+                {
+                    dictionaryToReturn[day.HolidayDate.Value] = day.HolidayName;
+                }
+            }
+
+            return dictionaryToReturn;
+        }
     }
 }

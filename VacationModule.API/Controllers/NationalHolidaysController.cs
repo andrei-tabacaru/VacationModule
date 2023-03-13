@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NationalHolidayModule.Core.DTO;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
 
 namespace VacationModule.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/national-holidays")]
     [ApiController]
     public class NationalHolidaysController : Controller
     {
@@ -16,8 +17,8 @@ namespace VacationModule.API.Controllers
             _nationalHolidaysService = nationalHolidaysService;
         }
 
-        [HttpPost]
-        [Route("[action]")]
+        [HttpPost("/api/admin/national-holidays")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NationalHolidayResponse>> Create(NationalHolidayAddRequest nationalHolidayAddRequest)
@@ -26,14 +27,13 @@ namespace VacationModule.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            NationalHolidayResponse? natioalHolidayResponse = await _nationalHolidaysService
+            NationalHolidayResponse natioalHolidayResponse = await _nationalHolidaysService
                 .AddNationalHolidayAsync(nationalHolidayAddRequest);
 
             return Ok(natioalHolidayResponse);
         }
 
         [HttpGet]
-        [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<NationalHolidayResponse>>> GetNationalHolidays()
         {
@@ -42,8 +42,8 @@ namespace VacationModule.API.Controllers
             return Ok(nationalHolidaysList);
         }
 
-        [HttpPut]
-        [Route("[action]/{Id:Guid}")]
+        [HttpPut("/api/admin/national-holidays/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -69,8 +69,8 @@ namespace VacationModule.API.Controllers
             return NoContent();
         }
 
-        [HttpPut]
-        [Route("[action]/{year:int}")]
+        [HttpPut("/api/admin/national-holidays/{yearId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<NationalHolidayResponse>>> UpdateNationalHolidaysToYear(int year)
@@ -88,8 +88,8 @@ namespace VacationModule.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("[action]/{Id:Guid}")]
+        [HttpDelete("/api/admin/national-holidays/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

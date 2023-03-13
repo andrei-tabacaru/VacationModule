@@ -129,7 +129,7 @@ namespace VacationModule.Core.Services
             return await _nationalHolidayRepository.DeleteNationalHolidayByIdAsync(Id.Value);
         }
 
-        public async Task<Dictionary<DateOnly, string?>> GetListToDictionaryAsync()
+        /*public async Task<Dictionary<DateOnly, string?>> GetListToDictionaryAsync()
         {
             // new dictionary with DateOnly as key and string as value
             Dictionary<DateOnly, string?> dictionaryToReturn = new Dictionary<DateOnly, string?>();
@@ -151,7 +151,7 @@ namespace VacationModule.Core.Services
             }
 
             return dictionaryToReturn;
-        }
+        }*/
 
         public async Task<List<NationalHolidayResponse>> UpdateYearToAsync(int year)
         {
