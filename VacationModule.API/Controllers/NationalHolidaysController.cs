@@ -42,7 +42,7 @@ namespace VacationModule.API.Controllers
             return Ok(nationalHolidaysList);
         }
 
-        [HttpPut("/api/admin/national-holidays/{id}")]
+        [HttpPut("/api/admin/national-holidays/{Id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -69,7 +69,7 @@ namespace VacationModule.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("/api/admin/national-holidays/{yearId}")]
+        [HttpPut("/api/admin/national-holidays/update-to/{year}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -88,19 +88,19 @@ namespace VacationModule.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("/api/admin/national-holidays/{id}")]
+        [HttpDelete("/api/admin/national-holidays/{idToDelete}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<bool>> DeleteNationalHoliday(Guid? Id)
+        public async Task<ActionResult<bool>> DeleteNationalHoliday(Guid? idToDelete)
         {
-            if(Id == null)
+            if(idToDelete == null)
             {
                 return BadRequest(ModelState);
             }
 
-            NationalHolidayResponse? nationalHolidayGetResponse = await _nationalHolidaysService.GetNationalHolidayByIdAsync(Id);
+            NationalHolidayResponse? nationalHolidayGetResponse = await _nationalHolidaysService.GetNationalHolidayByIdAsync(idToDelete);
 
             if(nationalHolidayGetResponse == null)
             {

@@ -4,6 +4,7 @@ using NationalHolidayModule.Core.DTO;
 using System.Security.Claims;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace VacationModule.API.Controllers
 {
@@ -170,23 +171,23 @@ namespace VacationModule.API.Controllers
             return Ok(vacationsList);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{updateId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<VacationResponse>> Edit(Guid Id, VacationUpdateRequest? vacationUpdateRequest)
+        public async Task<ActionResult<VacationResponse>> Edit(Guid updateId, VacationUpdateRequest? vacationUpdateRequest)
         {
             // The given Id and the vacationUpdateRequest's Id should be the same
             // otherwise HttpPut will create a new object
-            if (vacationUpdateRequest == null || Id != vacationUpdateRequest.Id)
+            if (vacationUpdateRequest == null || updateId != vacationUpdateRequest.Id)
             {
                 return BadRequest(ModelState);
             }
 
             VacationResponse? vacationResponse = await _vacationsService
-                .GetVacationByIdAsync(Id);
+                .GetVacationByIdAsync(updateId);
 
             if (vacationResponse == null)
             {
@@ -211,20 +212,20 @@ namespace VacationModule.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{deleteId}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<bool>> DeleteVacation(Guid? Id)
+        public async Task<ActionResult<bool>> DeleteVacation(Guid? deleteId)
         {
-            if(Id == null)
+            if(deleteId == null)
             {
                 return BadRequest(ModelState);
             }
 
-            VacationResponse? vacationGetResponse = await _vacationsService.GetVacationByIdAsync(Id);
+            VacationResponse? vacationGetResponse = await _vacationsService.GetVacationByIdAsync(deleteId);
 
             if(vacationGetResponse == null)
             {
