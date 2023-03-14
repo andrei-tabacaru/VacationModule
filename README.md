@@ -61,8 +61,15 @@ Make sure you have [`.NET 7.0`](https://dotnet.microsoft.com/en-us/download/dotn
  1. [Install Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
  2. Open `VacationModule.sln` in Visual Studio
  3. Go to `Tools` &rarr; `NuGet Package Manager` &rarr; `Manage NuGet Packages for Solution`
- 4. Click on `Browse` to search for packages, you can choose for what project to install the package and which `version`. Make sure to install the specified version in order to avoid unexpected behaviour.
 
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_1.png">
+ </p>
+
+ 4. Click on `Browse` to search for packages, you can choose for what project to install the package and which `version`. Make sure to install the specified version in order to avoid unexpected behaviour.
+  <p align = "center">
+  <img width = "80%" height = "80%" src ="images/image_2.png">
+ </p>
 #### NuGet Packages
 
 * DateOnlyTimeOnly.AspNet.Swashbuckle 2.2.1
@@ -140,7 +147,26 @@ Make sure you have [`.NET 7.0`](https://dotnet.microsoft.com/en-us/download/dotn
 ###
    Press `Ctrl`+`Shift`+`B` to `Build` the solution. Some packages depend on other packages and it should have installed everything you need, but in case the build fails it might ask you to install some more packages.
 ##### Setting up the databse:
-Click on `View` &rarr; `SQL Server Object Explorer`. Expand `SQL Server`, `Right Click` on `localdb` and go to `Properties` &rarr; `General` &rarr; `Connection String` and copy it. 
+<center>
+
+Click on `View` &rarr; `SQL Server Object Explorer`.
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_5.png">
+ </p>
+
+ Expand `SQL Server`, `Right Click` on `localdb` and go to `Properties` 
+
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_6.png">
+ </p>
+
+`General` &rarr; `Connection String` and copy it. 
+
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_7.png">
+ </p>
+
+</center>
 
 It should be something like:
 ```
@@ -150,9 +176,36 @@ You only need:
 ```
 Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;
 ```
+<center>
 
-Go to `VacationModule.API` &rarr; `appsettings.json` and replace the `DefaultConnection` string with yours.
-Go to `Tools` &rarr; `NuGet Package Manager` &rarr; `Package Manager Console` then for the Default Project select `VacationModule.Infrastructure`. In the terminal write `Update-Database` and hit `Enter`. Now it will create your databse and seed the `National Holidays` table with the data from `VacationModule.API`\/`nationalholdays.json`.
+Go to `VacationModule.API` &rarr; `appsettings.json`
+
+ <p align = "center">
+  <img width = "30%" height = "30%" src ="images/image_9.png">
+ </p>
+
+Replace the `DefaultConnection` string with yours.
+
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_10.png">
+ </p>
+
+Go to `Tools` &rarr; `NuGet Package Manager` &rarr; `Package Manager Console` 
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_3.png">
+ </p>
+
+`Default Project` &rarr; `VacationModule.Infrastructure`. 
+
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_4.png">
+ </p>
+
+In the console, write `Update-Database` and hit `Enter`.
+
+ </center>
+
+ Now it will create your databse and seed the `National Holidays` table with the data from `VacationModule.API`\/`nationalholdays.json`.
 
 Press `F5` to run the project.
 
