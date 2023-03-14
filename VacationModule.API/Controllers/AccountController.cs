@@ -24,6 +24,8 @@ namespace VacationModule.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody]RegisterDTO registerDTO)
         {
             // Check for validation errors
@@ -93,6 +95,8 @@ namespace VacationModule.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody]LoginDTO loginDTO)
         {
             // Check for validation errors
@@ -119,6 +123,7 @@ namespace VacationModule.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

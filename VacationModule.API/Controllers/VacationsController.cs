@@ -101,7 +101,7 @@ namespace VacationModule.API.Controllers
         [HttpGet(template: "all")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetVacations()
         {
             Guid? currentUserId = GetUserId();
@@ -113,7 +113,7 @@ namespace VacationModule.API.Controllers
         [HttpGet(template: "history")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetPastVacations()
         {
             Guid? currentUserId = GetUserId();
@@ -125,7 +125,7 @@ namespace VacationModule.API.Controllers
         [HttpGet(template: "current")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetCurrentVacations()
         {
             Guid? currentUserId = GetUserId();
@@ -137,7 +137,7 @@ namespace VacationModule.API.Controllers
         [HttpGet(template: "/api/admin/vacations")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetAllCurrentVacations()
         {
             Guid? currentUserId = GetUserId();
@@ -149,7 +149,7 @@ namespace VacationModule.API.Controllers
         [HttpGet(template: "/api/admin/vacations/history")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetVacationsHistory()
         {
             Guid? currentUserId = GetUserId();
@@ -158,11 +158,11 @@ namespace VacationModule.API.Controllers
             return Ok(vacationsList);
         }
 
-        [HttpGet(template: "/api/admin/vacations/users/{id}")]
+        [HttpGet(template: "/api/admin/vacations/users/{userId}")]
         [Authorize(Roles = "Admin")]
-        //[Route("Admin3")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetUserVacations(Guid? userId)
         {
             Guid? currentUserId = GetUserId();
@@ -248,6 +248,7 @@ namespace VacationModule.API.Controllers
         [Route("available-days")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<int>> GetAvailableDaysNumberForYear(int inputYear)
         {
             Guid? currentUserId = GetUserId();

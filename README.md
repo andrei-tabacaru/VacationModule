@@ -21,7 +21,7 @@ The solution implements the arhitectural pattern of Clean Arhitecture. The main 
 * **Scalability:** The architecture allows for the application to be scaled horizontally or vertically, since each layer can be scaled independently.
 ### VacationModule.API
 
-This project is the main web API application that serves the vacation module. It has dependencies on `VacationModule.Core` and `VacationModule.Infrastructure` projects. The `VacationModule.API` project is built using ASP.NET Core and follows the RESTful API architectural style. Swagger documentation is available. `DateOnlyTimeOnly.AspNet.Swashbuckle` package is used to use the correct format for `DateOnly` type in the Swagger documentation because it is a fairly new data type and it is not yet supported.
+This project is the main application that serves the vacation module. It has dependencies on `VacationModule.Core` and `VacationModule.Infrastructure` projects. The `VacationModule.API` project is built using ASP.NET Core and follows the RESTful API architectural style. Swagger documentation is available. `DateOnlyTimeOnly.AspNet.Swashbuckle` package is used to use the correct format for `DateOnly` type in the Swagger documentation because it is a fairly new data type and it is not yet supported.
 
 ### VacationModule.Core
 
@@ -221,14 +221,77 @@ When you create a vacation request the following constraints are applied:
 
 
 ### Endpoints
+
+##
+### Account
+##
+
+Authentication system of the API.
+
+##
+### Register
+##
+
+This endpoint is used to create a new user. The user will autmatically be logged in if the action is succesful. Restrictions are minimal for easier testing. The email regex validation is not present. The password requieres only 3 lower case characters and needs only one unique character. (valid password e.g.: aaa). To register an `Employee` supply `0` for role. To register an `Admin`, supply `1` for role. The endpoint expects a JSON object containing the following properties:
+ * `userName` (string): User name to register the user with.
+ * `email` (string): Email to register the user with.
+ * `password` (string): Password to register the user with.
+ * `role` (int): Role to use (`0` for `Employee`; `1` for `Admin`).
+
+* Example request body:
+  ```
+  {
+    "userName": "string",
+    "email": "string",
+    "password": "aaa",
+    "role": 0
+  }
+  ```
+
+* Response:
+  * 200 OK: The user is registered succesfuly.
+  * 400 Bad Request: If the request is invalid.
+
+##
+### Login
+##
+
+This endpoint is used to log in an existing user. The endpoint expects a JSON object containing the following properties:
+ * `email` (string): Email of the user to log in.
+ * `password` (string): Password of the user to log in.
+
+* Example request body:
+  ```
+  {
+    "email": "string",
+    "password": "aaa"
+  }
+  ```
+
+* Response:
+  * 200 OK: The user is registered succesfuly.
+  * 400 Bad Request: If the request is invalid.
+
+##
+### Login
+##
+
+This endpoint is used to log out an existing user. The endpoint doesn't expect any parameter.
+
+* Response:
+  * 200 OK: The user is logged out succesfuly.
+
 ##
 ### National Holidays
-#####
+##
+
+CRUD operations for national holidays. Create, Update, Remove available for users that have the `Admin` role. Get is available for any user (authentication not requiered).
+
 #
 ### Create National Holiday [POST /api/admin/national-holidays]
 ##
 
-This endpoint is used to create a new national holiday. It requires the user to be authorized with the "Admin" role. The endpoint expects a JSON object containing the following properties:
+This endpoint is used to create a new national holiday. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
   * `name` (string): Name of the holiday.
   * `holidayDate` (string): Date of the holiday (in format "yyyy-MM-dd").
   
@@ -277,12 +340,12 @@ This endpoint is used to retrieve a list of all national holidays. It does not r
 ### Edit National Holiday [PUT /api/admin/national-holidays/{Id}]
 ##
 
-This endpoint is used to update an existing national holiday. It requires the user to be authorized with the "Admin" role. The endpoint expects a JSON object containing the following properties:
+This endpoint is used to update an existing national holiday. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
 
 * Path parameters:
   * `Id` (string): Unique identifier of the holiday to update.
 
-* Request body: JSON object containing the following fields (all fields are optional):
+* Request body: JSON object containing the following fields:
   * `id` (string): Unique identifier of the holiday to update. (has to match the path parameter)
   * `name` (string): New name of the holiday.
   * `holidayDate` (string): New date of the holiday (in format "yyyy-MM-dd").
@@ -305,7 +368,7 @@ This endpoint is used to update an existing national holiday. It requires the us
 ### Update National Holidays to Year [PUT /api/admin/national-holidays/update-to/{year}]
 ##
 
-This endpoint is used to update all national holidays to a specific year. It requires the user to be authorized with the "Admin" role. The endpoint expects a JSON object containing the following properties:
+This endpoint is used to update all national holidays to a specific year. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
 * Path parameters:
   * `year` (int): Year to update the national holidays to.
   
@@ -317,7 +380,7 @@ This endpoint is used to update all national holidays to a specific year. It req
 ### Delete National Holiday [DELETE /api/admin/national-holidays/{id}]
 ##
 
-his endpoint is used to delete an existing national holiday. It requires the user to be authorized with the "Admin" role. The endpoint expects a JSON object containing the following properties:
+his endpoint is used to delete an existing national holiday. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
 
 * Path parameters:
   * `idToDelete` (string): Unique identifier of the holiday to delete.
@@ -331,11 +394,13 @@ his endpoint is used to delete an existing national holiday. It requires the use
 ### Vacations
 ###
 
+Main functionality of the API, CRUD operations for vacations with some special retrieve endpoints for user that have the `Admin` role.
+
 ##
 ### Create Vacation [POST /api/vacations]
 ##
 
-This API endpoint allows authenticated users to create a new vacation record. The user must provide a start date and an end date for their vacation. The endpoint expects a JSON object containing the following properties:
+This endpoint allows authenticated users to create a new vacation record. The user must provide a start date and an end date for their vacation. The endpoint expects a JSON object containing the following properties:
   * `startDate` (string): The start date of the vacation, in "yyyy-MM-dd" format.
   * `endDate` (string): The end date of the vacation, in "yyyy-MM-dd" format.
   
@@ -353,25 +418,275 @@ This API endpoint allows authenticated users to create a new vacation record. Th
   * 401 Unauthorized: The user is not authenticated.
   
 ##
-### Create Vacation [POST /api/vacations]
+### Get Vacation [GET api/vacations/get-by-id/{id}]
 ##
 
-This API endpoint allows authenticated users to create a new vacation record. The user must provide a start date and an end date for their vacation. The endpoint expects a JSON object containing the following properties:
+This endpoint allows authenticated users to retrieve information about a vacation record. The user must the unique identifier of the vacation. The endpoint expects a JSON object containing the following properties:
+* Path parameters:
+  * `id` (string): Unique identifier of vacation to search.
+
+* Response:
+  * 200 OK: The requested vacation, represented as a JSON object with the following fields:
+    * `id` (string): Unique identifier of the vacation.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endDate` (string): End date of the vacatiom (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user.
+  * 400 Bad Request: The unique identifier of the vacation to get is invalid.
+  * 404 Not Found: The requested vacation was not found.
+  * 401 Unauthorized: The vacation with the given unique identifier is binded to another user and the authenticated user does not have `Admin` role.
+
+##
+### Get Vacations [GET api/vacations/all]
+##
+
+This endpoint allows authenticated users to retrieve a list of all vacation requests they have.
+* Example response body:
+  ```
+  [
+    {
+      "id": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
+      "startDate": "2023-03-02",
+      "endDate": "2023-03-02",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    },
+    {
+      "id": "53383214-a086-4552-a37b-4479f0e29d62",
+      "startDate": "2023-03-24",
+      "endDate": "2023-03-24",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    }
+  ]
+  ```
+* Response:
+  * 200 OK: List of user's vacation requests, represented as an array of JSON objects with the following fields:
+    * `id` (string): Unique identifier of the vacation request.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endtDate` (string): End date of the vacation (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user.
+  * 401 Unauthorized: The vacation with the given unique identifier is binded to another user.
+
+##
+### Get Past Vacations [GET api/vacations/history]
+##
+
+This endpoint allows authenticated users to retrieve a list of all their vacation requests that have the end date before the current date.
+* Example response body:
+  ```
+  [
+    {
+      "id": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
+      "startDate": "2023-03-02",
+      "endDate": "2023-03-02",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    },
+    {
+      "id": "53383214-a086-4552-a37b-4479f0e29d62",
+      "startDate": "2023-03-24",
+      "endDate": "2023-03-24",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    }
+  ]
+  ```
+* Response:
+  * 200 OK: List of user's vacation requests, represented as an array of JSON objects with the following fields:
+    * `id` (string): Unique identifier of the vacation request.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endtDate` (string): End date of the vacation (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user.
+  * 401 Unauthorized: The vacation with the given unique identifier is binded to another user.
+
+##
+### Get Current Vacations [GET api/vacations/current]
+##
+
+This endpoint allows authenticated users to retrieve a list of all their vacation requests that have the start date after the current date and those that are not ended yet.
+* Example response body:
+  ```
+  [
+    {
+      "id": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
+      "startDate": "2023-03-02",
+      "endDate": "2023-03-02",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    },
+    {
+      "id": "53383214-a086-4552-a37b-4479f0e29d62",
+      "startDate": "2023-03-24",
+      "endDate": "2023-03-24",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    }
+  ]
+  ```
+* Response:
+  * 200 OK: List of user's vacation requests, represented as an array of JSON objects with the following fields:
+    * `id` (string): Unique identifier of the vacation request.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endtDate` (string): End date of the vacation (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user.
+  * 401 Unauthorized: The vacation with the given unique identifier is binded to another user.
+
+##
+### Get All Current Vacations [GET api/admin/vacations]
+##
+
+This endpoint allows authenticated users that has the `Admin` role to retrieve a list of all vacation requests that have the start date after the current date and those that are not ended yet. (from all users).
+* Example response body:
+  ```
+  [
+    {
+      "id": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
+      "startDate": "2023-03-02",
+      "endDate": "2023-03-02",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    },
+    {
+      "id": "53383214-a086-4552-a37b-4479f0e29d62",
+      "startDate": "2023-03-24",
+      "endDate": "2023-03-24",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    }
+  ]
+  ```
+* Response:
+  * 200 OK: List of user's vacation requests, represented as an array of JSON objects with the following fields:
+    * `id` (string): Unique identifier of the vacation request.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endtDate` (string): End date of the vacation (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user.
+  * 401 Unauthorized: The user does not have the `Admin` role.
+
+##
+### Get Vacations History [GET api/admin/vacations/history]
+##
+
+This endpoint allows authenticated users that has the `Admin` role to retrieve a list of all vacation requests that have the end date before the current date (from all users).
+* Example response body:
+  ```
+  [
+    {
+      "id": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
+      "startDate": "2023-03-02",
+      "endDate": "2023-03-02",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    },
+    {
+      "id": "53383214-a086-4552-a37b-4479f0e29d62",
+      "startDate": "2023-03-24",
+      "endDate": "2023-03-24",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    }
+  ]
+  ```
+* Response:
+  * 200 OK: List of user's vacation requests, represented as an array of JSON objects with the following fields:
+    * `id` (string): Unique identifier of the vacation request.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endtDate` (string): End date of the vacation (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user.
+  * 401 Unauthorized: The user does not have the `Admin` role.
+
+##
+### Get User Vacations [GET api/admin/vacations/users/{userId}]
+##
+
+This endpoint allows authenticated users that has the `Admin` role to retrieve a list of all vacation requests that have the start date after the current date and those that are not ended yet. (from an user).
+* Path parameters:
+  * `userId` (string): Unique identifier of the user to to retrieve the vacations request from.
+
+* Example response body:
+  ```
+  [
+    {
+      "id": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
+      "startDate": "2023-03-02",
+      "endDate": "2023-03-02",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    },
+    {
+      "id": "53383214-a086-4552-a37b-4479f0e29d62",
+      "startDate": "2023-03-24",
+      "endDate": "2023-03-24",
+      "applicationUserId": "1dbfa653-5443-4152-89d3-08db234db42b"
+    }
+  ]
+  ```
+* Response:
+  * 200 OK: List of user's vacation requests, represented as an array of JSON objects with the following fields:
+    * `id` (string): Unique identifier of the vacation request.
+    * `startDate` (string): Start date of the vacatiom (in format "yyyy-MM-dd").
+    * `endtDate` (string): End date of the vacation (in format "yyyy-MM-dd").
+    * `applicationUserId` (string): Unique identifier of the user. (matches the path parameter)
+  * 401 Unauthorized: The user does not have the `Admin` role.
+
+##
+### Edit [PUT /api/vacations/{updateId}]
+##
+
+This endpoint allows authenticated users to update an existing vacation record. The user have to provide the unique identifier of the vacation they want to update. Also must provide a start date and an end date for their vacation. The body request also needs the unique identifier of the vacation and has to match the path parameter.
+* Path parameters:
+  * `updateId` (string): Unique identifier of the vacation record to update.
+
+* Request body:
+  * `updateId` (string): Unique identifier of the vacation record to update. (has to match the path parameter)
   * `startDate` (string): The start date of the vacation, in "yyyy-MM-dd" format.
   * `endDate` (string): The end date of the vacation, in "yyyy-MM-dd" format.
   
 * Example request body:
   ```
   {
+    "updateId": "66bfe1fe-ddbd-48c2-8fee-403d613c4c1e",
     "startDate": "2023-03-13",
     "endDate": "2023-03-13"
   }	
   ```
 * Response:
-  * 201 Created: The vacation request was successfully created.
+  * 204 No Content: The vacation update was successful.
   * 400 Bad Request: The request body is invalid or missing required properties.
-  * 404 Not Found: The user or vacation request was not found.
+  * 404 Not Found: The user or vacation was not found.
   * 401 Unauthorized: The user is not authenticated.
 
-  ## To be continued...
-  You can see the information for the other endpoints in the Swagger Documentation.
+##
+### Delete Vacation [DELETE /api/vacations/{deleteId}]
+##
+
+This endpoint allows authenticated users to delete an existing vacation record they have. 
+* Path parameters:
+  * `deleteId` (string): Unique identifier of the vacation record to remove.
+
+* Response:
+  * 204 No Content: The vacation deletion was successful.
+  * 400 Bad Request: The request body is invalid or missing required properties.
+  * 404 Not Found: The user or vacation was not found.
+  * 401 Unauthorized: The user is not authenticated.
+
+##
+### Get Available Days Number for Year [GET /api/vacations/available-days]
+##
+
+This endpoint allows authenticated users to check how many vacations day they have left for a specified year.
+* Path parameters:
+  * `inputYear` (string): Unique identifier of the vacation record to remove.
+
+* Response:
+  * 200 OK: The vacation deletion was successful.
+  * 400 Bad Request: The request body is invalid or missing required properties.
+  * 401 Unauthorized: The user is not authenticated.
+
+#
+## Testing
+##
+The solution contains unit tests for services and controllers and integration tests.
+
+<center>
+
+Go to `View` &rarr; `Test Explorer`
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_11.png">
+ </p>
+
+ Run the tests 
+ <p align = "center">
+  <img width = "50%" height = "50%" src ="images/image_12.png">
+ </p>
+
+</center>
