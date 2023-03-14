@@ -70,6 +70,7 @@ Make sure you have [`.NET 7.0`](https://dotnet.microsoft.com/en-us/download/dotn
   <p align = "center">
   <img width = "80%" height = "80%" src ="images/image_2.png">
  </p>
+ 
 #### NuGet Packages
 
 * DateOnlyTimeOnly.AspNet.Swashbuckle 2.2.1
