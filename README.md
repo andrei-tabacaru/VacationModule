@@ -273,7 +273,7 @@ This endpoint is used to log in an existing user. The endpoint expects a JSON ob
   * 400 Bad Request: If the request is invalid.
 
 ##
-### Login
+### Logout
 ##
 
 This endpoint is used to log out an existing user. The endpoint doesn't expect any parameter.
