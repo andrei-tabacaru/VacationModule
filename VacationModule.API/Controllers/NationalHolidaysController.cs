@@ -8,7 +8,7 @@ namespace VacationModule.API.Controllers
 {
     [Route("api/national-holidays")]
     [ApiController]
-    public class NationalHolidaysController : Controller
+    public class NationalHolidaysController : ControllerBase
     {
         private readonly INationalHolidaysService _nationalHolidaysService;
 

@@ -10,7 +10,7 @@ namespace VacationModule.API.Controllers
 {
     [Route("api/vacations")]
     [ApiController]
-    public class VacationsController : Controller
+    public class VacationsController : ControllerBase
     {
         private readonly IVacationsService _vacationsService;
 
