@@ -140,8 +140,6 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetAllCurrentVacations()
         {
-            Guid? currentUserId = GetUserId();
-
             List<VacationResponse> vacationsList = await _vacationsService.GetAllVacationsAsync(true, false);
             return Ok(vacationsList);
         }
@@ -152,8 +150,6 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<VacationResponse>>> GetVacationsHistory()
         {
-            Guid? currentUserId = GetUserId();
-
             List<VacationResponse> vacationsList = await _vacationsService.GetAllVacationsAsync(false, true);
             return Ok(vacationsList);
         }

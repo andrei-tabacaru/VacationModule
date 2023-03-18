@@ -28,12 +28,6 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody]RegisterDTO registerDTO)
         {
-            // Check for validation errors
-            if(ModelState.IsValid == false)
-            {
-                return BadRequest(ModelState);
-            }
-
             ApplicationUser user = new ApplicationUser()
             {
                 UserName = registerDTO.UserName,
@@ -99,12 +93,6 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody]LoginDTO loginDTO)
         {
-            // Check for validation errors
-            if (ModelState.IsValid == false)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _signInManager.PasswordSignInAsync(
                 loginDTO.Email!,
                 loginDTO.Password!,
