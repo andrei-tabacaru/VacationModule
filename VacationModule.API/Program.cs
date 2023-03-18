@@ -17,6 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // repositories
 builder.Services.AddScoped<INationalHolidayRepository, NationalHolidayRepository>();
+
+// add new functionality respecting open-closed principle (don't modify an existing class, unless fixing a bug)
+builder.Services.AddScoped<NationalHolidayRepository, NationalHolidayRepository>();
+builder.Services.AddScoped<INationalHolidayUpdateRepository, NationalHolidayUpdateRepository>();
 builder.Services.AddScoped<IVacationRepository, VacationRepository>();
 // services
 builder.Services.AddScoped<INationalHolidaysService, NationalHolidaysService>();

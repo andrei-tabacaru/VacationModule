@@ -17,13 +17,17 @@ namespace VacationModule.Core.Services
         // The mentioned method return a dictionary with HolidayDate key and HolidayName value 
         // It is used to check efficeiently if a date is a national holiday
         private readonly INationalHolidayRepository _nationalHolidaysRepository;
+        // added to use the new dictionary method that has year parameter
+        private readonly INationalHolidayUpdateRepository _nationalHolidaysUpdateRepository;
 
         public VacationsService(IVacationRepository vacationRepository,
-            INationalHolidayRepository nationalHolidayRepository)
+            INationalHolidayRepository nationalHolidayRepository,
+            INationalHolidayUpdateRepository nationalHolidaysUpdateRepository)
         {
 
             _vacationRepository = vacationRepository;
             _nationalHolidaysRepository = nationalHolidayRepository;
+            _nationalHolidaysUpdateRepository = nationalHolidaysUpdateRepository;
         }
         public async Task<VacationResponse> AddVacationAsync(VacationAddRequest? vacationAddRequest, Guid? UserId)
         {
@@ -324,9 +328,18 @@ namespace VacationModule.Core.Services
         /// <returns>The number of days between two dates</returns>
         public async Task<int> GetUsedWorkingDays(DateOnly startDate, DateOnly endDate)
         {
+            if(startDate > endDate)
+            {
+                throw new ArgumentException("The start date can't be after the end date");
+            }
+
+            if(startDate.Year != endDate.Year)
+            {
+                throw new ArgumentException("The end date should be in the same year");
+            }
             int returnNumber = 0;
             // get dictonary of national holidays 
-            var nationalHolidaysDictionary = await _nationalHolidaysRepository.GetNationalHolidaysDictionaryAsync();
+            var nationalHolidaysDictionary = await _nationalHolidaysUpdateRepository.GetNationalHolidaysDictionaryYearAsync(startDate.Year);
 
             for (var day = startDate; !day.Equals(endDate.AddDays(1)); day = day.AddDays(1))
             {
