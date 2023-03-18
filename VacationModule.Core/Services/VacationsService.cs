@@ -293,7 +293,7 @@ namespace VacationModule.Core.Services
                     remainingVacationDays = remainingVacationDays - (await GetUsedWorkingDays(StartDate, EndDate));
                 }
                 // vacation ends after the parameter year
-                else if(vacation.StartDate!.Value.Year < year)
+                else if(vacation.EndDate!.Value.Year > year)
                 {
                     // get the start date from the vacation obj
                     DateOnly StartDate = (DateOnly)vacation.StartDate!;
