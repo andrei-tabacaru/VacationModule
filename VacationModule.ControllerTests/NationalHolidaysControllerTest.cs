@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VacationModule.API.Controllers;
+using VacationModule.API.Controllers.v1;
 using VacationModule.Core.Domain.Entities;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;

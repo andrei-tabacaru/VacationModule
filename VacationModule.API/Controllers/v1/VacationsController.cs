@@ -6,10 +6,11 @@ using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace VacationModule.API.Controllers
+namespace VacationModule.API.Controllers.v1
 {
-    [Route("api/vacations")]
+    [Route("api/v{version:apiVersion}/vacations")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VacationsController : ControllerBase
     {
         private readonly IVacationsService _vacationsService;
@@ -58,7 +59,8 @@ namespace VacationModule.API.Controllers
 
                 return CreatedAtRoute("GetById", new { id = vacationResponse.Id }, vacationResponse);
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -134,7 +136,7 @@ namespace VacationModule.API.Controllers
             return Ok(vacationsList);
         }
 
-        [HttpGet(template: "/api/admin/vacations")]
+        [HttpGet(template: "/api/v{version:apiVersion}/admin/vacations")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -144,7 +146,7 @@ namespace VacationModule.API.Controllers
             return Ok(vacationsList);
         }
 
-        [HttpGet(template: "/api/admin/vacations/history")]
+        [HttpGet(template: "/api/v{version:apiVersion}/admin/vacations/history")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -154,7 +156,7 @@ namespace VacationModule.API.Controllers
             return Ok(vacationsList);
         }
 
-        [HttpGet(template: "/api/admin/vacations/users/{userId}")]
+        [HttpGet(template: "/api/v{version:apiVersion}/admin/vacations/users/{userId}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -202,7 +204,7 @@ namespace VacationModule.API.Controllers
             }
             catch (Exception ex)
             {
-                 return BadRequest(ex.Message);
+                return BadRequest(ex.Message);
             }
 
             return NoContent();
@@ -216,14 +218,14 @@ namespace VacationModule.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<bool>> DeleteVacation(Guid? deleteId)
         {
-            if(deleteId == null)
+            if (deleteId == null)
             {
                 return BadRequest(ModelState);
             }
 
             VacationResponse? vacationGetResponse = await _vacationsService.GetVacationByIdAsync(deleteId);
 
-            if(vacationGetResponse == null)
+            if (vacationGetResponse == null)
             {
                 return NotFound(ModelState);
             }
@@ -236,7 +238,7 @@ namespace VacationModule.API.Controllers
 
             await _vacationsService.DeleteVacationAsync(vacationGetResponse.Id);
 
-            return NoContent();   
+            return NoContent();
         }
 
         [HttpGet]

@@ -5,10 +5,11 @@ using VacationModule.Core.Domain.IdentityEntities;
 using VacationModule.Core.DTO;
 using VacationModule.Core.Enums;
 
-namespace VacationModule.API.Controllers
+namespace VacationModule.API.Controllers.v1
 {
+    [ApiVersion("1.0")]
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -27,7 +28,7 @@ namespace VacationModule.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register([FromBody]RegisterDTO registerDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
         {
             ApplicationUser user = new ApplicationUser()
             {
@@ -43,7 +44,7 @@ namespace VacationModule.API.Controllers
                 if (registerDTO.Role == UserRoleOptions.Admin)
                 {
                     // Create Admin role
-                    if (await _roleManager.FindByNameAsync(UserRoleOptions.Admin.ToString()) is null) 
+                    if (await _roleManager.FindByNameAsync(UserRoleOptions.Admin.ToString()) is null)
                     {
                         ApplicationRole applicationRole = new ApplicationRole()
                         {
@@ -80,7 +81,7 @@ namespace VacationModule.API.Controllers
             }
             else
             {
-                foreach(IdentityError error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError("Register", error.Description);
                 }
@@ -92,7 +93,7 @@ namespace VacationModule.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login([FromBody]LoginDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             var result = await _signInManager.PasswordSignInAsync(
                 loginDTO.Email!,
@@ -107,7 +108,7 @@ namespace VacationModule.API.Controllers
                 return Ok(loginDTO);
             }
             ModelState.AddModelError("Login", "Invalid email or password");
-            
+
             return BadRequest(result);
         }
 

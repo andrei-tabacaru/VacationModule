@@ -93,6 +93,16 @@ Make sure you have [`.NET 7.0`](https://dotnet.microsoft.com/en-us/download/dotn
   * [Link to package page](https://www.nuget.org/packages/ErikEJ.EntityFrameworkCore.SqlServer.DateOnlyTimeOnly/)
   * Install for: `VacationModule.API`
 
+* Microsoft.AspNetCore.Mvc.Versioning 5.0.0
+  * Short description: A service API versioning library for Microsoft ASP.NET Core.
+  * [Link to package page](https://www.nuget.org/packages/Microsoft.AspNetCore.Mvc.Versioning/5.0.0?_src=template)
+  * Install for: `VacationModule.API`
+
+* Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer 5.0.0
+  * Short description: ASP.NET Core MVC API explorer functionality for discovering metadata such as the list of API-versioned controllers and actions, and their URLs and allowed HTTP methods.
+  * [Link to package page](https://www.nuget.org/packages/Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer/5.0.0?_src=template)
+  * Install for: `VacationModule.API`
+
 * Microsoft.AspNetCore.OpenApi 7.0.3
   * Short description: Provides a set of services to generate Swagger documents for an API, and also provides a set of middleware to expose that Swagger document as JSON and HTML.
   * [Link to package page](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi/)
