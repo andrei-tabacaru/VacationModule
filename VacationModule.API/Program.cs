@@ -8,13 +8,20 @@ using VacationModule.Infrastructure.Repositories;
 using VacationModule.Core.Domain.IdentityEntities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // only json response content type
+    options.Filters.Add(new ProducesAttribute("application/json"));
+    // only json request body content type
+    options.Filters.Add(new ConsumesAttribute("application/json"));
+});
 // repositories
 builder.Services.AddScoped<INationalHolidayRepository, NationalHolidayRepository>();
 
