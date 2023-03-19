@@ -20,9 +20,11 @@ namespace VacationModule.ServiceTests
         // Used to mock the methods of IVacationRepository
         private readonly Mock<IVacationRepository> _vacationRepositoryMock;
         private readonly Mock<INationalHolidayRepository> _nationalHolidayRepositoryMock;
+        private readonly Mock<INationalHolidayUpdateRepository> _nationalHolidayUpdateRepositoryMock;
         // Represents the mocked object that was created by Mock<T>
         private readonly IVacationRepository _vacationRepository;
         private readonly INationalHolidayRepository _nationalHolidayRepository;
+        private readonly INationalHolidayUpdateRepository _nationalHolidayUpdateRepository;
 
         public VacationsServiceTest()
         {
@@ -35,10 +37,15 @@ namespace VacationModule.ServiceTests
             // Create a false NationalHolidayRepository object that will change the repository's
             // methods to those defined by the Mock repository
             _nationalHolidayRepository = _nationalHolidayRepositoryMock.Object;
+            
+            _nationalHolidayUpdateRepositoryMock = new Mock<INationalHolidayUpdateRepository>();
+            // Create a false NationalHolidayRepository object that will change the repository's
+            // methods to those defined by the Mock repository
+            _nationalHolidayUpdateRepository = _nationalHolidayUpdateRepositoryMock.Object;
 
             // Create the service based on mocked repository object
             // This will allow to call mocked repository methods when the service will be used
-            _vacationsService = new VacationsService(_vacationRepository, _nationalHolidayRepository);
+            _vacationsService = new VacationsService(_vacationRepository, _nationalHolidayRepository, _nationalHolidayUpdateRepository);
         }
 
         #region AddVacation
@@ -188,11 +195,14 @@ namespace VacationModule.ServiceTests
 
             // Empty Dictionary
             Dictionary<DateOnly, DateOnly> emptyVacationDictionary = new Dictionary<DateOnly, DateOnly>();
+
             Dictionary<DateOnly, string?> emptyNationalHolidayDictionary = new Dictionary<DateOnly, string?>();
 
             _vacationRepositoryMock.Setup(temp => temp.GetVacationsDictionaryAsync(It.IsAny<Guid>())).ReturnsAsync(emptyVacationDictionary);
 
             _nationalHolidayRepositoryMock.Setup(temp => temp.GetNationalHolidaysDictionaryAsync()).ReturnsAsync(emptyNationalHolidayDictionary);
+
+            _nationalHolidayUpdateRepositoryMock.Setup(temp => temp.GetNationalHolidaysDictionaryYearAsync(It.IsAny<int>())).ReturnsAsync(emptyNationalHolidayDictionary);
 
 
             // Act
@@ -474,6 +484,8 @@ namespace VacationModule.ServiceTests
             _vacationRepositoryMock.Setup(temp => temp.GetVacationsDictionaryAsync(It.IsAny<Guid>())).ReturnsAsync(emptyVacationDictionary);
 
             _nationalHolidayRepositoryMock.Setup(temp => temp.GetNationalHolidaysDictionaryAsync()).ReturnsAsync(emptyNationalHolidayDictionary);
+
+            _nationalHolidayUpdateRepositoryMock.Setup(temp => temp.GetNationalHolidaysDictionaryYearAsync(It.IsAny<int>())).ReturnsAsync(emptyNationalHolidayDictionary);
 
             // Act
             // save the response in vacation_response_from_update

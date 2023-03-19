@@ -7,6 +7,7 @@ using VacationModule.Core.Enums;
 
 namespace VacationModule.API.Controllers
 {
+    [ApiController]
     [Route("api/[controller]/[action]")]
     public class AccountController : ControllerBase
     {

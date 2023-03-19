@@ -87,7 +87,7 @@ namespace VacationModule.ControllerTests
 
             // Controller
             NationalHolidaysController nationalHolidaysController = new NationalHolidaysController(_nationalHolidayService);
-            nationalHolidaysController.ViewData.ModelState.Clear();
+            
             // No need to mock here, it will return bad request before accessing the service
 
             // Act
