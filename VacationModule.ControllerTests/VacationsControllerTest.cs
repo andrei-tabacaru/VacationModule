@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VacationModule.API.Controllers;
 using VacationModule.Core.Domain.Entities;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
 using System.Security.Claims;
+using VacationModule.API.Controllers.v1;
 
 namespace VacationModule.ControllerTests
 {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VacationModule.API.Controllers;
+using VacationModule.API.Controllers.v1;
 using VacationModule.Core.Domain.Entities;
 using VacationModule.Core.DTO;
 using VacationModule.Core.ServiceContracts;
@@ -87,7 +87,7 @@ namespace VacationModule.ControllerTests
 
             // Controller
             NationalHolidaysController nationalHolidaysController = new NationalHolidaysController(_nationalHolidayService);
-            nationalHolidaysController.ViewData.ModelState.Clear();
+            
             // No need to mock here, it will return bad request before accessing the service
 
             // Act
