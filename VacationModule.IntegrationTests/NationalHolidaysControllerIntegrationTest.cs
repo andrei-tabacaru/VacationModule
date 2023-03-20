@@ -36,7 +36,7 @@ namespace VacationModule.IntegrationTests
             List<NationalHolidayResponse> expectedResponseContent = new List<NationalHolidayResponse>();
 
             // Act
-            HttpResponseMessage response = await _client.GetAsync("api/national-holidays");
+            HttpResponseMessage response = await _client.GetAsync("api/v1/national-holidays");
 
             // deserialize the json output
             var actualResponseContent = await response.Content.ReadFromJsonAsync<List<NationalHolidayResponse>>();
@@ -62,7 +62,7 @@ namespace VacationModule.IntegrationTests
             var jsonUser = JsonContent.Create(user);
 
             // register a new user, it will be logged in automatically
-            await _client.PostAsync("api/Account/Register", jsonUser);
+            await _client.PostAsync("api/v1/Account/Register", jsonUser);
 
             // national holiday to add
             var nationalHolidayAddRequest = new NationalHolidayAddRequest()
@@ -77,7 +77,7 @@ namespace VacationModule.IntegrationTests
 
             // Act
             HttpResponseMessage response = await _client
-                .PostAsJsonAsync("/api/admin/national-holidays", nationalHolidayAddRequest);
+                .PostAsJsonAsync("/api/v1/admin/national-holidays", nationalHolidayAddRequest);
 
             var responseContent = await response.Content.ReadFromJsonAsync<NationalHolidayResponse>();
 
