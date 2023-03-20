@@ -6,7 +6,7 @@
 
 RESTful API vacation module that lets users fill in the dates for
 their vacation days. It takes into consideration the working days of the week as
-well as the national holidays. Each user should start from 25 available vacation days per
+well as the national holidays. Each user starts from 25 available vacation days per
 year.
 
 ## Projects
@@ -239,7 +239,7 @@ When you create a vacation request the following constraints are applied:
 Authentication system of the API.
 
 ##
-### Register
+### Register [POST /api/v1/Account/Register]
 ##
 
 This endpoint is used to create a new user. The user will autmatically be logged in if the action is succesful. Restrictions are minimal for easier testing. The email regex validation is not present. The password requieres only 3 lower case characters and needs only one unique character. (valid password e.g.: aaa). To register an `Employee` supply `0` for role. To register an `Admin`, supply `1` for role. The endpoint expects a JSON object containing the following properties:
@@ -263,7 +263,7 @@ This endpoint is used to create a new user. The user will autmatically be logged
   * 400 Bad Request: If the request is invalid.
 
 ##
-### Login
+### Login [POST /api/v1/Account/Login]
 ##
 
 This endpoint is used to log in an existing user. The endpoint expects a JSON object containing the following properties:
@@ -283,7 +283,7 @@ This endpoint is used to log in an existing user. The endpoint expects a JSON ob
   * 400 Bad Request: If the request is invalid.
 
 ##
-### Login
+### Logout [POST /api/v1/Account/Logout]
 ##
 
 This endpoint is used to log out an existing user. The endpoint doesn't expect any parameter.
@@ -298,7 +298,7 @@ This endpoint is used to log out an existing user. The endpoint doesn't expect a
 CRUD operations for national holidays. Create, Update, Remove available for users that have the `Admin` role. Get is available for any user (authentication not requiered).
 
 #
-### Create National Holiday [POST /api/admin/national-holidays]
+### Create National Holiday [POST /api/v1/admin/national-holidays]
 ##
 
 This endpoint is used to create a new national holiday. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
@@ -320,7 +320,7 @@ This endpoint is used to create a new national holiday. It requires the user to 
   * 400 Bad Request: If the `holidayDate` is missing or invalid.
 
 ##
-### Get National Holidays [GET /api/national-holidays]
+### Get National Holidays [GET /api/v1/national-holidays]
 ##
 
 This endpoint is used to retrieve a list of all national holidays. It does not require any authorization.
@@ -347,7 +347,7 @@ This endpoint is used to retrieve a list of all national holidays. It does not r
     * `holidayDate` (string): Date of the holiday (in format "yyyy-MM-dd").
 
 ##
-### Edit National Holiday [PUT /api/admin/national-holidays/{Id}]
+### Edit National Holiday [PUT /api/admin/v1/national-holidays/{Id}]
 ##
 
 This endpoint is used to update an existing national holiday. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
@@ -375,7 +375,7 @@ This endpoint is used to update an existing national holiday. It requires the us
   * 404 Not Found: If the national holiday with the specified `id` does not exist.
 
 ##
-### Update National Holidays to Year [PUT /api/admin/national-holidays/update-to/{year}]
+### Update National Holidays to Year [PUT /api/v1/admin/national-holidays/update-to/{year}]
 ##
 
 This endpoint is used to update all national holidays to a specific year. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
@@ -387,7 +387,7 @@ This endpoint is used to update all national holidays to a specific year. It req
   * 404 Not Found: If there are no national holidays in the system.
 
 ##
-### Delete National Holiday [DELETE /api/admin/national-holidays/{id}]
+### Delete National Holiday [DELETE /api/v1/admin/national-holidays/{id}]
 ##
 
 his endpoint is used to delete an existing national holiday. It requires the user to be authorized with the `Admin` role. The endpoint expects a JSON object containing the following properties:
@@ -407,7 +407,7 @@ his endpoint is used to delete an existing national holiday. It requires the use
 Main functionality of the API, CRUD operations for vacations with some special retrieve endpoints for user that have the `Admin` role.
 
 ##
-### Create Vacation [POST /api/vacations]
+### Create Vacation [POST /api/v1/vacations]
 ##
 
 This endpoint allows authenticated users to create a new vacation record. The user must provide a start date and an end date for their vacation. The endpoint expects a JSON object containing the following properties:
@@ -428,7 +428,7 @@ This endpoint allows authenticated users to create a new vacation record. The us
   * 401 Unauthorized: The user is not authenticated.
   
 ##
-### Get Vacation [GET api/vacations/get-by-id/{id}]
+### Get Vacation [GET api/v1/vacations/get-by-id/{id}]
 ##
 
 This endpoint allows authenticated users to retrieve information about a vacation record. The user must the unique identifier of the vacation. The endpoint expects a JSON object containing the following properties:
@@ -446,7 +446,7 @@ This endpoint allows authenticated users to retrieve information about a vacatio
   * 401 Unauthorized: The vacation with the given unique identifier is binded to another user and the authenticated user does not have `Admin` role.
 
 ##
-### Get Vacations [GET api/vacations/all]
+### Get Vacations [GET api/v1/vacations/all]
 ##
 
 This endpoint allows authenticated users to retrieve a list of all vacation requests they have.
@@ -476,7 +476,7 @@ This endpoint allows authenticated users to retrieve a list of all vacation requ
   * 401 Unauthorized: The vacation with the given unique identifier is binded to another user.
 
 ##
-### Get Past Vacations [GET api/vacations/history]
+### Get Past Vacations [GET api/v1/vacations/history]
 ##
 
 This endpoint allows authenticated users to retrieve a list of all their vacation requests that have the end date before the current date.
@@ -506,7 +506,7 @@ This endpoint allows authenticated users to retrieve a list of all their vacatio
   * 401 Unauthorized: The vacation with the given unique identifier is binded to another user.
 
 ##
-### Get Current Vacations [GET api/vacations/current]
+### Get Current Vacations [GET api/v1/vacations/current]
 ##
 
 This endpoint allows authenticated users to retrieve a list of all their vacation requests that have the start date after the current date and those that are not ended yet.
@@ -536,7 +536,7 @@ This endpoint allows authenticated users to retrieve a list of all their vacatio
   * 401 Unauthorized: The vacation with the given unique identifier is binded to another user.
 
 ##
-### Get All Current Vacations [GET api/admin/vacations]
+### Get All Current Vacations [GET api/v1/admin/vacations]
 ##
 
 This endpoint allows authenticated users that has the `Admin` role to retrieve a list of all vacation requests that have the start date after the current date and those that are not ended yet. (from all users).
@@ -566,7 +566,7 @@ This endpoint allows authenticated users that has the `Admin` role to retrieve a
   * 401 Unauthorized: The user does not have the `Admin` role.
 
 ##
-### Get Vacations History [GET api/admin/vacations/history]
+### Get Vacations History [GET api/v1/admin/vacations/history]
 ##
 
 This endpoint allows authenticated users that has the `Admin` role to retrieve a list of all vacation requests that have the end date before the current date (from all users).
@@ -596,7 +596,7 @@ This endpoint allows authenticated users that has the `Admin` role to retrieve a
   * 401 Unauthorized: The user does not have the `Admin` role.
 
 ##
-### Get User Vacations [GET api/admin/vacations/users/{userId}]
+### Get User Vacations [GET api/v1/admin/vacations/users/{userId}]
 ##
 
 This endpoint allows authenticated users that has the `Admin` role to retrieve a list of all vacation requests that have the start date after the current date and those that are not ended yet. (from an user).
@@ -629,7 +629,7 @@ This endpoint allows authenticated users that has the `Admin` role to retrieve a
   * 401 Unauthorized: The user does not have the `Admin` role.
 
 ##
-### Edit [PUT /api/vacations/{updateId}]
+### Edit [PUT /api/v1/vacations/{updateId}]
 ##
 
 This endpoint allows authenticated users to update an existing vacation record. The user have to provide the unique identifier of the vacation they want to update. Also must provide a start date and an end date for their vacation. The body request also needs the unique identifier of the vacation and has to match the path parameter.
@@ -656,7 +656,7 @@ This endpoint allows authenticated users to update an existing vacation record. 
   * 401 Unauthorized: The user is not authenticated.
 
 ##
-### Delete Vacation [DELETE /api/vacations/{deleteId}]
+### Delete Vacation [DELETE /api/v1/vacations/{deleteId}]
 ##
 
 This endpoint allows authenticated users to delete an existing vacation record they have. 
@@ -670,7 +670,7 @@ This endpoint allows authenticated users to delete an existing vacation record t
   * 401 Unauthorized: The user is not authenticated.
 
 ##
-### Get Available Days Number for Year [GET /api/vacations/available-days]
+### Get Available Days Number for Year [GET /api/v1/vacations/available-days]
 ##
 
 This endpoint allows authenticated users to check how many vacations day they have left for a specified year.
